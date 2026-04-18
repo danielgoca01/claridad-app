@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+<meta name="theme-color" content="#0f0d16">
+<title>Claridad</title>
+
+<!-- iOS / iPadOS: anclar a pantalla de inicio -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Claridad">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+<!-- Android / PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+
+<!-- Claridad Brand System · Geist + Instrument Serif + JetBrains Mono -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;500;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  /* Tipografía brand system (común a todos los temas) */
+  --font-body: "Geist", -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  --font-display: "Geist", -apple-system, BlinkMacSystemFont, "Inter Display", sans-serif;
+  --font-serif: "Instrument Serif", "Playfair Display", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+
+/* ═══ TEMAS ═══ Cada tema define su paleta completa */
+
+/* T1 · Signature — plum + pink + mint (el actual) */
+body.theme-signature, body:not([class*="theme-"]) {
+  --dark: #0f0d16; --plum: #1a1823; --deep: #2a1f3d;
+  --fg: #ece9f2; --fg-dim: rgba(236,233,242,0.55); --fg-mute: rgba(236,233,242,0.3);
+  --pink: #ff5ca8; --mint: #5aff9c; --lavender: #c9b8e8; --peach: #f5c9b8;
+  --butter: #f5dea3; --sky: #b8d4e8; --acid: #d9ff4a; --rose: #ff5ca8;
+  --card: rgba(255,255,255,0.03); --card-hi: rgba(255,255,255,0.06); --line: rgba(255,255,255,0.06);
+  --bg-gradient:
+    radial-gradient(ellipse at 30% 10%, rgba(42,31,61,0.7) 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(255,92,168,0.12) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(90,255,156,0.08) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* T2 · Daylight — crema + rosé + verde bosque (light mode) */
+body.theme-daylight {
+  --dark: #ece4d6; --plum: #f5ead5; --deep: #ffffff;
+  --fg: #1a1823; --fg-dim: rgba(26,24,35,0.6); --fg-mute: rgba(26,24,35,0.35);
+  --pink: #d94a6b; --mint: #3d9d6a; --lavender: #7d5ec4; --peach: #c77b4e;
+  --butter: #b8841a; --sky: #4a6fa5; --acid: #3d9d6a; --rose: #d94a6b;
+  --card: rgba(0,0,0,0.03); --card-hi: rgba(0,0,0,0.06); --line: rgba(0,0,0,0.08);
+  --bg-gradient:
+    radial-gradient(ellipse at 30% 10%, rgba(255,234,213,0.7) 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(217,74,107,0.08) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(61,157,106,0.06) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* T3 · Midnight Lux — negro + oro + lavender (premium) */
+body.theme-lux {
+  --dark: #000000; --plum: #0a0a0a; --deep: #1a1a1a;
+  --fg: #fff8e0; --fg-dim: rgba(255,248,224,0.55); --fg-mute: rgba(255,248,224,0.3);
+  --pink: #e8c979; --mint: #f5dea3; --lavender: #c9b8e8; --peach: #e8c979;
+  --butter: #f5dea3; --sky: #c9b8e8; --acid: #e8c979; --rose: #e8c979;
+  --card: rgba(232,201,121,0.04); --card-hi: rgba(232,201,121,0.08); --line: rgba(232,201,121,0.1);
+  --bg-gradient:
+    radial-gradient(ellipse at 30% 10%, rgba(26,26,26,0.8) 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(232,201,121,0.12) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(201,184,232,0.08) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* T4 · Garden — verdes + terracota (orgánico) */
+body.theme-garden {
+  --dark: #1a2e1f; --plum: #253d2a; --deep: #2f4a35;
+  --fg: #f5ead5; --fg-dim: rgba(245,234,213,0.6); --fg-mute: rgba(245,234,213,0.3);
+  --pink: #c77b4e; --mint: #8fba6a; --lavender: #d4a574; --peach: #c77b4e;
+  --butter: #d4a574; --sky: #8fba6a; --acid: #8fba6a; --rose: #c77b4e;
+  --card: rgba(255,255,255,0.04); --card-hi: rgba(255,255,255,0.08); --line: rgba(255,255,255,0.07);
+  --bg-gradient:
+    radial-gradient(ellipse at 30% 10%, rgba(47,74,53,0.8) 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(199,123,78,0.12) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(143,186,106,0.1) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* T5 · Sunset — coral + amber + rosa cálido (latino) */
+body.theme-sunset {
+  --dark: #2a0f0f; --plum: #3d1a1a; --deep: #4a2020;
+  --fg: #fff3e0; --fg-dim: rgba(255,243,224,0.6); --fg-mute: rgba(255,243,224,0.3);
+  --pink: #ff6b4a; --mint: #ffb347; --lavender: #ff8fa3; --peach: #ff8fa3;
+  --butter: #ffb347; --sky: #ff8fa3; --acid: #ffb347; --rose: #ff6b4a;
+  --card: rgba(255,255,255,0.04); --card-hi: rgba(255,255,255,0.08); --line: rgba(255,255,255,0.07);
+  --bg-gradient:
+    radial-gradient(ellipse at 30% 10%, rgba(74,32,32,0.8) 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(255,107,74,0.15) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(255,179,71,0.1) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* T6 · Nordic Calm — blanco + azul acento (minimal light) */
+body.theme-nordic {
+  --dark: #f7f6f4; --plum: #ffffff; --deep: #eeece8;
+  --fg: #1e1e24; --fg-dim: rgba(30,30,36,0.6); --fg-mute: rgba(30,30,36,0.35);
+  --pink: #4a6fa5; --mint: #8aa3c4; --lavender: #d4dde8; --peach: #8aa3c4;
+  --butter: #8aa3c4; --sky: #4a6fa5; --acid: #4a6fa5; --rose: #4a6fa5;
+  --card: rgba(0,0,0,0.03); --card-hi: rgba(0,0,0,0.06); --line: rgba(0,0,0,0.08);
+  --bg-gradient:
+    radial-gradient(ellipse at 30% 10%, rgba(238,236,232,0.7) 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(74,111,165,0.08) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(138,163,196,0.06) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* T7 · Arcade — magenta + cian + amarillo (Y2K neón) */
+body.theme-arcade {
+  --dark: #000000; --plum: #0a0a0a; --deep: #1a1a1a;
+  --fg: #ffffff; --fg-dim: rgba(255,255,255,0.6); --fg-mute: rgba(255,255,255,0.35);
+  --pink: #ff00d4; --mint: #00f0ff; --lavender: #fff300; --peach: #ff00d4;
+  --butter: #fff300; --sky: #00f0ff; --acid: #fff300; --rose: #ff00d4;
+  --card: rgba(255,255,255,0.04); --card-hi: rgba(255,255,255,0.08); --line: rgba(255,0,212,0.2);
+  --bg-gradient:
+    radial-gradient(ellipse at 30% 10%, rgba(26,26,26,0.8) 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(255,0,212,0.15) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(0,240,255,0.1) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* T8 · Pastel Soft — polvo rosa + menta + lila (light accesible) */
+body.theme-pastel {
+  --dark: #f5e8ed; --plum: #ede4f2; --deep: #e5eef0;
+  --fg: #3d2e4a; --fg-dim: rgba(61,46,74,0.6); --fg-mute: rgba(61,46,74,0.35);
+  --pink: #f2a8c5; --mint: #a8d8c5; --lavender: #c5b8e8; --peach: #f2a8c5;
+  --butter: #f5dea3; --sky: #c5b8e8; --acid: #a8d8c5; --rose: #f2a8c5;
+  --card: rgba(255,255,255,0.5); --card-hi: rgba(255,255,255,0.75); --line: rgba(61,46,74,0.1);
+  --bg-gradient:
+    radial-gradient(ellipse at 30% 10%, rgba(237,228,242,0.7) 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(242,168,197,0.15) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(168,216,197,0.12) 0%, transparent 50%),
+    var(--dark);
+}
+
+/* T9 · High Contrast — blanco + negro + ácido (editorial) */
+body.theme-contrast {
+  --dark: #ffffff; --plum: #f5f5f5; --deep: #e5e5e5;
+  --fg: #000000; --fg-dim: rgba(0,0,0,0.65); --fg-mute: rgba(0,0,0,0.4);
+  --pink: #000000; --mint: #d9ff4a; --lavender: #222; --peach: #222;
+  --butter: #d9ff4a; --sky: #222; --acid: #d9ff4a; --rose: #000000;
+  --card: rgba(0,0,0,0.04); --card-hi: rgba(0,0,0,0.08); --line: rgba(0,0,0,0.12);
+  --bg-gradient: var(--dark);
+}
+
+:root {
+  /* Variables derivadas (soft/dim) que funcionan en cualquier tema */
+  --mint-soft: color-mix(in srgb, var(--mint) 10%, transparent);
+  --mint-dim: color-mix(in srgb, var(--mint) 35%, transparent);
+  --peach-soft: color-mix(in srgb, var(--peach) 10%, transparent);
+  --peach-dim: color-mix(in srgb, var(--peach) 40%, transparent);
+  --pink-soft: color-mix(in srgb, var(--pink) 10%, transparent);
+  --pink-dim: color-mix(in srgb, var(--pink) 35%, transparent);
+  --lavender-soft: color-mix(in srgb, var(--lavender) 12%, transparent);
+  --butter-soft: color-mix(in srgb, var(--butter) 10%, transparent);
+  --rose-soft: color-mix(in srgb, var(--rose) 10%, transparent);
+  --sky-soft: color-mix(in srgb, var(--sky) 10%, transparent);
+  --bg: var(--dark);
+  --bg-2: var(--plum);
+  --bg-3: var(--deep);
+  --accent: var(--mint);
+  --warn: var(--butter);
+  --danger: var(--pink);
+}
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg-gradient, var(--dark));
+  transition: background 400ms ease, color 400ms ease;
+}
+a, button { color: inherit; font: inherit; background: none; border: 0; cursor: pointer; }
+:focus { outline: none; }
+::selection { background: var(--pink-dim); color: var(--fg); }
+
+/* Italic serif helper */
+.serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+.mono { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* ORBS — filtro goo para el logo Liquid */
+.goo-filter { position: absolute; width: 0; height: 0; overflow: hidden; }
+@keyframes liq-orb1 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(18%,-14%) scale(1.08); } 66% { transform: translate(-10%,18%) scale(0.95); } }
+@keyframes liq-orb2 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(-16%,-12%) scale(1.04); } 66% { transform: translate(14%,16%) scale(1.08); } }
+@keyframes liq-orb3 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(12%,18%) scale(0.95); } 66% { transform: translate(-16%,-10%) scale(1.12); } }
+@keyframes liq-orb4 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(0,-22%) scale(1.08); } }
+.liq-orb1 { animation: liq-orb1 8s ease-in-out infinite; transform-origin: center; }
+.liq-orb2 { animation: liq-orb2 8s ease-in-out infinite; transform-origin: center; }
+.liq-orb3 { animation: liq-orb3 8s ease-in-out infinite; transform-origin: center; }
+.liq-orb4 { animation: liq-orb4 6s ease-in-out infinite; transform-origin: center; }
+.liquid-mark { filter: url(#goo-claridad); }
+
+/* LOGIN */
+.lock {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px;
+  background: var(--bg-gradient, var(--dark));
+  transition: background 400ms ease;
+}
+.lock-mark { width: 180px; height: 180px; margin-bottom: 8px; }
+.lock-logo { font-family: var(--font-display); font-size: 56px; font-weight: 200; letter-spacing: -0.04em; margin-bottom: 8px; line-height: 1; }
+.lock-logo em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--pink); }
+.lock-logo + .lock-input { margin-top: 40px; }
+.lock-input { width: 100%; max-width: 320px; padding: 16px 20px; border-radius: 100px; background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--line); color: var(--fg); font-size: 16px; font-family: var(--font-body); font-weight: 400; text-align: center; letter-spacing: 0.04em; outline: none; transition: all 0.2s; }
+.lock-input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(255,92,168,0.12); }
+.lock-btn { margin-top: 14px; padding: 14px 36px; background: var(--fg); color: var(--dark); border-radius: 100px; font-weight: 500; font-size: 15px; font-family: var(--font-body); transition: transform 0.1s; }
+.lock-btn:active { transform: scale(0.97); }
+.lock-hint { margin-top: 36px; color: var(--fg-mute); font-size: 12px; font-family: var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.lock-err { color: var(--pink); margin-top: 14px; font-size: 13px; height: 18px; font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* MAIN */
+.app { max-width: 680px; margin: 0 auto; padding: 40px 24px 120px; }
+.app.hidden { display: none; }
+
+/* GREETING */
+.greet { padding: 80px 0 60px; }
+.greet-sub { color: var(--fg-dim); font-size: 15px; margin-bottom: 24px; font-weight: 400; }
+.greet-title { font-family: var(--font-display); font-weight: 200; font-size: clamp(36px, 8vw, 56px); letter-spacing: -0.035em; line-height: 1.05; color: var(--fg); margin-bottom: 32px; }
+.greet-title em { font-style: normal; color: var(--accent); font-weight: 300; }
+.greet-big { font-family: var(--font-display); font-weight: 200; font-size: clamp(56px, 15vw, 120px); letter-spacing: -0.05em; line-height: 0.9; margin: 24px 0; }
+.greet-big.negativo { color: var(--fg); }
+.greet-big .sym { color: var(--fg-mute); margin-right: 4px; font-weight: 100; }
+.greet-delta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--card); border-radius: 100px; font-size: 14px; margin-top: 16px; }
+.greet-delta.up { color: var(--warn); }
+.greet-delta.down { color: var(--accent); }
+.chev { opacity: 0.4; font-size: 24px; margin-top: 60px; text-align: center; animation: bounce 2s infinite; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+/* SECTIONS */
+.section { padding: 80px 0; border-top: 1px solid var(--line); }
+.section-label { color: var(--fg-mute); font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; font-weight: 600; }
+.section-title { font-family: var(--font-display); font-weight: 200; font-size: clamp(28px, 6vw, 44px); letter-spacing: -0.035em; line-height: 1.05; margin-bottom: 40px; color: var(--fg); }
+.section-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--pink); }
+
+/* CATEGORY CARDS */
+.cat-list { display: flex; flex-direction: column; gap: 12px; }
+.cat-card { background: var(--card); border-radius: 20px; padding: 24px; transition: background 0.2s; cursor: pointer; }
+.cat-card:hover { background: var(--card-hi); }
+.cat-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; gap: 16px; }
+.cat-name { font-size: 17px; font-weight: 500; color: var(--fg); }
+.cat-monto { font-family: var(--font-display); font-size: 28px; font-weight: 300; letter-spacing: -0.02em; white-space: nowrap; }
+.cat-sub { color: var(--fg-dim); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
+.cat-bar { height: 4px; background: var(--bg-2); border-radius: 2px; overflow: hidden; margin-bottom: 12px; }
+.cat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 100%); border-radius: 2px; transition: width 0.8s ease-out; }
+.cat-bar-fill.warn { background: var(--warn); }
+.cat-bar-fill.danger { background: var(--danger); }
+.cat-compare { display: flex; justify-content: space-between; color: var(--fg-mute); font-size: 12px; }
+.cat-compare .delta.up { color: var(--warn); }
+.cat-compare .delta.down { color: var(--accent); }
+
+/* SUBSCRIPTION LIST */
+.susc-list { display: flex; flex-direction: column; gap: 1px; background: var(--line); border-radius: 20px; overflow: hidden; }
+.susc-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: var(--bg); }
+.susc-name { font-size: 15px; }
+.susc-monto { font-family: var(--font-display); font-size: 18px; font-weight: 400; letter-spacing: -0.01em; }
+.susc-total { margin-top: 16px; padding: 18px 24px; background: var(--card); border-radius: 20px; display: flex; justify-content: space-between; align-items: center; }
+.susc-total-lbl { color: var(--fg-dim); font-size: 14px; }
+.susc-total-val { font-family: var(--font-display); font-size: 24px; font-weight: 300; color: var(--warn); }
+
+/* ARRENDATARIOS */
+.arr-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.arr-card { background: var(--card); border-radius: 20px; padding: 24px; }
+.arr-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+.arr-name { font-size: 18px; font-weight: 500; }
+.arr-status { font-size: 13px; }
+.arr-status.ok { color: var(--accent); }
+.arr-status.pending { color: var(--warn); }
+.arr-dots { display: flex; gap: 4px; flex-wrap: wrap; }
+.arr-dot { width: 14px; height: 14px; border-radius: 4px; background: var(--bg-2); position: relative; }
+.arr-dot.paid { background: var(--accent); }
+.arr-dot.partial { background: var(--warn); }
+.arr-dot.empty { background: var(--bg-2); }
+.arr-dot-tip { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 4px 8px; border-radius: 6px; font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
+.arr-dot:hover .arr-dot-tip { opacity: 1; }
+.arr-months { display: flex; justify-content: space-between; color: var(--fg-mute); font-size: 11px; margin-top: 6px; }
+.arr-totals { display: flex; justify-content: space-between; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.arr-total-lbl { color: var(--fg-dim); font-size: 13px; }
+.arr-total-val { font-family: var(--font-display); font-weight: 400; font-size: 18px; }
+
+/* LINEA TEMPORAL */
+.chart-wrap { background: var(--card); border-radius: 24px; padding: 24px; margin-top: 16px; }
+.chart-title { color: var(--fg-dim); font-size: 13px; margin-bottom: 24px; }
+.chart-svg { width: 100%; height: 180px; }
+.chart-axis { color: var(--fg-mute); font-size: 11px; display: flex; justify-content: space-between; margin-top: 8px; }
+
+/* RECOMENDACIONES */
+.reco-list { display: flex; flex-direction: column; gap: 16px; }
+.reco-card { background: linear-gradient(135deg, var(--card), var(--card-hi)); border: 1px solid var(--line); border-radius: 24px; padding: 28px; }
+.reco-num { font-family: var(--font-display); font-size: 48px; font-weight: 200; color: var(--accent); line-height: 1; margin-bottom: 16px; }
+.reco-title { font-size: 19px; font-weight: 500; margin-bottom: 8px; line-height: 1.3; }
+.reco-detail { color: var(--fg-dim); font-size: 14px; line-height: 1.5; margin-bottom: 16px; }
+.reco-save { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--accent-dim); color: var(--accent); border-radius: 100px; font-size: 13px; font-weight: 500; }
+.reco-total { margin-top: 32px; text-align: center; padding: 32px 24px; background: var(--card); border-radius: 24px; }
+.reco-total-lbl { color: var(--fg-dim); font-size: 14px; margin-bottom: 8px; }
+.reco-total-val { font-family: var(--font-display); font-size: 44px; font-weight: 200; color: var(--accent); letter-spacing: -0.02em; }
+.reco-total-sub { color: var(--fg-mute); font-size: 13px; margin-top: 4px; }
+
+/* FOOTER */
+.foot { text-align: center; padding: 60px 0 0; color: var(--fg-mute); font-size: 12px; }
+.foot a { color: var(--fg-dim); text-decoration: underline; text-decoration-color: var(--fg-mute); }
+
+/* UTILIDADES */
+.fade-in { animation: fadeIn 0.6s ease forwards; opacity: 0; }
+@keyframes fadeIn { to { opacity: 1; } }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+
+/* ALERT */
+.alert { padding: 16px 20px; background: var(--butter-soft); border: 1px solid rgba(245,222,163,0.2); border-radius: 16px; margin-bottom: 24px; color: var(--butter); font-size: 14px; }
+.alert strong { font-weight: 600; }
+
+/* ===== NUEVA VISTA: GRID MENSUAL ===== */
+.app { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 40px 20px 80px; }
+
+.hero { padding: 48px 0 40px; position: relative; }
+.hero-mark-mini { position: absolute; top: 48px; right: 0; width: 56px; height: 56px; opacity: 0.9; }
+.hero-sub { font-family: var(--font-mono); color: var(--fg-mute); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px; }
+.hero-sub span { color: var(--mint); }
+.hero-title { font-family: var(--font-display); font-weight: 200; font-size: clamp(42px, 8vw, 72px); letter-spacing: -0.04em; line-height: 0.98; margin-bottom: 32px; }
+.hero-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--pink); }
+
+.kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+@media (max-width: 640px) { .kpi-row { grid-template-columns: 1fr; } }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px 22px; }
+.kpi-lbl { color: var(--fg-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; font-weight: 600; }
+.kpi-val { font-family: var(--font-display); font-size: 28px; font-weight: 300; letter-spacing: -0.02em; }
+.kpi.ingreso .kpi-val { color: var(--mint); }
+.kpi.egreso .kpi-val { color: var(--peach); }
+.kpi.balance .kpi-val { color: var(--lavender); }
+.kpi-sub { color: var(--fg-mute); font-size: 12px; margin-top: 6px; }
+
+.year-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.year-tab { padding: 10px 20px; border-radius: 100px; background: transparent; border: 1px solid var(--line); color: var(--fg-dim); font-size: 14px; font-weight: 500; transition: all 0.2s; cursor: pointer; }
+.year-tab:hover { background: var(--card); color: var(--fg); }
+.year-tab.active { background: var(--lavender-soft); border-color: var(--lavender); color: var(--lavender); }
+
+/* Grid de meses */
+.months-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.month-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px 22px 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.month-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--mint) var(--ingreso-pct, 50%), var(--peach) var(--ingreso-pct, 50%));
+  opacity: 0.6;
+}
+.month-card:hover { background: var(--card-hi); border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+.month-card.current { border-color: var(--lavender-dim, rgba(201,184,232,0.3)); }
+.month-card.current::after {
+  content: 'actual';
+  position: absolute;
+  top: 14px; right: 14px;
+  background: var(--lavender-soft);
+  color: var(--lavender);
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 4px 10px; border-radius: 100px; font-weight: 600;
+}
+
+.mc-nombre { font-family: var(--font-display); font-size: 22px; font-weight: 400; letter-spacing: -0.015em; margin-bottom: 14px; text-transform: capitalize; }
+.mc-row { display: flex; justify-content: space-between; align-items: baseline; margin: 6px 0; font-size: 14px; }
+.mc-row .lbl { color: var(--fg-dim); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+.mc-row .lbl .dot { width: 6px; height: 6px; border-radius: 50%; }
+.mc-row .lbl .dot.i { background: var(--mint); }
+.mc-row .lbl .dot.e { background: var(--peach); }
+.mc-row .num { font-family: var(--font-display); font-weight: 400; font-size: 17px; letter-spacing: -0.01em; }
+.mc-row.ingreso .num { color: var(--mint); }
+.mc-row.egreso .num { color: var(--peach); }
+.mc-bal { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.mc-bal .b-lbl { color: var(--fg-mute); font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; }
+.mc-bal .b-num { font-family: var(--font-display); font-weight: 500; font-size: 18px; letter-spacing: -0.015em; }
+.mc-bal .b-num.pos { color: var(--mint); }
+.mc-bal .b-num.neg { color: var(--rose); }
+.mc-bar { height: 4px; background: var(--bg-2); border-radius: 2px; margin-top: 14px; overflow: hidden; display: flex; }
+.mc-bar .fill-i { background: var(--mint); opacity: 0.7; transition: width 0.6s; }
+.mc-bar .fill-e { background: var(--peach); opacity: 0.7; transition: width 0.6s; }
+
+/* Modal/Drawer detalle mes */
+.sheet-backdrop { position: fixed; inset: 0; background: rgba(26,24,35,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 500; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+.sheet {
+  position: fixed;
+  top: 0; right: 0;
+  width: 100%; max-width: 520px;
+  height: 100vh;
+  background: var(--bg-2);
+  z-index: 510;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.25, 1);
+  overflow-y: auto;
+  border-left: 1px solid var(--line);
+}
+.sheet.open { transform: translateX(0); }
+.sheet-head { position: sticky; top: 0; background: var(--bg-2); padding: 24px 24px 16px; border-bottom: 1px solid var(--line); z-index: 1; backdrop-filter: blur(8px); }
+.sheet-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--fg-dim); cursor: pointer; transition: background 0.2s; }
+.sheet-close:hover { background: var(--card-hi); color: var(--fg); }
+.sheet-mes-sub { color: var(--fg-dim); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+.sheet-mes { font-family: var(--font-display); font-size: 32px; font-weight: 300; letter-spacing: -0.025em; text-transform: capitalize; }
+.sheet-body { padding: 24px; }
+
+.sheet-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+.sheet-stat { padding: 18px 20px; border-radius: 16px; }
+.sheet-stat.ingreso { background: var(--mint-soft); }
+.sheet-stat.egreso { background: var(--peach-soft); }
+.sheet-stat-lbl { color: var(--fg-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.sheet-stat-val { font-family: var(--font-display); font-size: 24px; font-weight: 400; letter-spacing: -0.02em; }
+.sheet-stat.ingreso .sheet-stat-val { color: var(--mint); }
+.sheet-stat.egreso .sheet-stat-val { color: var(--peach); }
+.sheet-stat-sub { color: var(--fg-mute); font-size: 11px; margin-top: 4px; }
+
+.sheet-balance { background: var(--lavender-soft); border-radius: 16px; padding: 18px 22px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; }
+.sheet-balance.neg { background: var(--rose-soft); }
+.sheet-balance-lbl { color: var(--fg-dim); font-size: 13px; }
+.sheet-balance-val { font-family: var(--font-display); font-size: 26px; font-weight: 500; letter-spacing: -0.02em; color: var(--lavender); }
+.sheet-balance.neg .sheet-balance-val { color: var(--rose); }
+
+.section-h { color: var(--fg); font-size: 13px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600; margin: 28px 0 14px; display: flex; align-items: center; gap: 8px; }
+.section-h .swatch { width: 10px; height: 10px; border-radius: 3px; }
+.section-h .swatch.mint { background: var(--mint); }
+.section-h .swatch.peach { background: var(--peach); }
+.section-h .swatch.lavender { background: var(--lavender); }
+
+/* Mini-cards de meses (aparece cuando sheet es de trimestre) */
+.meses-mini { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 8px; }
+.mes-mini {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mes-mini:hover { background: var(--card-hi); border-color: var(--lavender-soft); transform: translateY(-2px); }
+.mes-mini .mm-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.mes-mini .mm-title { font-family: var(--font-display); font-size: 17px; font-weight: 400; letter-spacing: -0.01em; text-transform: capitalize; }
+.mes-mini .mm-year { color: var(--fg-mute); font-size: 11px; }
+.mes-mini .mm-row { display: flex; justify-content: space-between; font-size: 12px; margin: 4px 0; color: var(--fg-dim); }
+.mes-mini .mm-row span:first-child { color: var(--fg-mute); text-transform: uppercase; letter-spacing: 0.08em; font-size: 10px; font-weight: 600; }
+.mes-mini .mm-i { color: var(--mint); font-family: var(--font-display); font-weight: 400; }
+.mes-mini .mm-e { color: var(--peach); font-family: var(--font-display); font-weight: 400; }
+.mes-mini .mm-bal-row { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+.mes-mini .mm-b { font-family: var(--font-display); font-weight: 500; font-size: 14px; }
+.mes-mini .mm-b.pos { color: var(--mint); }
+.mes-mini .mm-b.neg { color: var(--rose); }
+
+.grupos-list { display: flex; flex-direction: column; gap: 8px; }
+.grupo-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--card);
+  align-items: center;
+  transition: background 0.15s;
+  cursor: pointer;
+  user-select: none;
+}
+.grupo-item:hover { background: var(--card-hi); }
+.grupo-item.open { background: var(--card-hi); }
+.grupo-chev { color: var(--fg-mute); font-size: 11px; transition: transform 0.2s; width: 12px; text-align: center; }
+.grupo-item.open .grupo-chev { transform: rotate(90deg); }
+.grupo-name { font-size: 14px; font-weight: 500; }
+.grupo-n { color: var(--fg-mute); font-size: 11px; font-weight: 400; margin-left: 6px; }
+.grupo-monto { font-family: var(--font-display); font-size: 16px; font-weight: 400; letter-spacing: -0.01em; white-space: nowrap; }
+.grupo-item.ingreso .grupo-monto { color: var(--mint); }
+.grupo-item.egreso .grupo-monto { color: var(--peach); }
+.grupo-bar { grid-column: 1 / -1; height: 3px; background: var(--bg-3); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.grupo-bar .fill { height: 100%; border-radius: 2px; }
+.grupo-bar.mint .fill { background: var(--mint-dim); }
+.grupo-bar.peach .fill { background: var(--peach-dim); }
+
+/* Lista expandida de tx dentro de un grupo */
+.grupo-tx {
+  grid-column: 1 / -1;
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--line);
+}
+.grupo-item.open .grupo-tx { display: flex; animation: slideDown 0.25s ease; }
+.grupo-tx-item {
+  padding: 10px 14px;
+  background: var(--bg-2);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.grupo-tx-desc { font-size: 12.5px; line-height: 1.35; color: var(--fg); word-break: break-word; font-weight: 500; }
+.grupo-tx-desc .sub-count { display: inline-block; margin-left: 6px; padding: 1px 7px; background: var(--bg-3); color: var(--fg-dim); border-radius: 100px; font-size: 10px; font-weight: 600; }
+.grupo-tx-meta { color: var(--fg-mute); font-size: 10px; margin-top: 3px; }
+.grupo-tx-monto { font-family: var(--font-display); font-size: 13px; font-weight: 400; white-space: nowrap; }
+.grupo-item.egreso .grupo-tx-monto { color: var(--peach); }
+.grupo-item.ingreso .grupo-tx-monto { color: var(--mint); }
+
+.tx-list { display: flex; flex-direction: column; gap: 1px; background: var(--line); border-radius: 16px; overflow: hidden; margin-bottom: 16px; }
+.tx-item { padding: 14px 16px; background: var(--bg-2); display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+.tx-desc { font-size: 13px; line-height: 1.35; word-break: break-word; }
+.tx-meta { color: var(--fg-mute); font-size: 11px; margin-top: 4px; }
+.tx-meta .tag { display: inline-block; background: var(--bg-3); padding: 2px 8px; border-radius: 100px; margin-right: 6px; }
+.tx-monto { font-family: var(--font-display); font-size: 15px; font-weight: 400; color: var(--peach); white-space: nowrap; }
+
+.hidden { display: none !important; }
+
+/* ===== FEED JERÁRQUICO ===== */
+.feed-section { margin-bottom: 36px; }
+.feed-label { color: var(--fg-mute); font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; font-weight: 600; margin-bottom: 14px; padding-left: 2px; }
+
+/* Tarjeta grande (último mes, segundo) */
+.mes-grande {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.mes-grande:hover { background: var(--card-hi); transform: translateY(-2px); border-color: rgba(255,255,255,0.12); }
+.mes-grande.actual::before {
+  content: 'este mes';
+  position: absolute; top: 22px; right: 24px;
+  background: var(--lavender-soft); color: var(--lavender);
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+  padding: 5px 12px; border-radius: 100px; font-weight: 600;
+}
+.mg-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+.mg-nombre { font-family: var(--font-display); font-size: 28px; font-weight: 300; letter-spacing: -0.025em; text-transform: capitalize; }
+.mg-year { color: var(--fg-mute); font-size: 14px; font-weight: 400; margin-left: 8px; }
+.mg-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.mg-stat { padding: 14px 16px; border-radius: 14px; }
+.mg-stat.ingreso { background: var(--mint-soft); }
+.mg-stat.egreso { background: var(--peach-soft); }
+.mg-stat-lbl { color: var(--fg-dim); font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 6px; }
+.mg-stat-val { font-family: var(--font-display); font-size: 22px; font-weight: 400; letter-spacing: -0.02em; }
+.mg-stat.ingreso .mg-stat-val { color: var(--mint); }
+.mg-stat.egreso .mg-stat-val { color: var(--peach); }
+.mg-bal { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.mg-bal-lbl { color: var(--fg-dim); font-size: 13px; }
+.mg-bal-val { font-family: var(--font-display); font-size: 22px; font-weight: 500; letter-spacing: -0.02em; }
+.mg-bal-val.pos { color: var(--mint); }
+.mg-bal-val.neg { color: var(--rose); }
+
+/* Grupo trimestre o bimestre */
+.mes-grupo {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px 22px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) auto auto;
+  gap: 20px;
+  align-items: center;
+}
+.mes-grupo:hover { background: var(--card-hi); }
+.mgp-nombre { font-size: 16px; font-weight: 500; text-transform: none; }
+.mgp-sub { color: var(--fg-mute); font-size: 11px; margin-top: 4px; text-transform: lowercase; letter-spacing: 0.02em; }
+.mgp-ing { color: var(--mint); font-family: var(--font-display); font-size: 15px; font-weight: 400; white-space: nowrap; }
+.mgp-egr { color: var(--peach); font-family: var(--font-display); font-size: 15px; font-weight: 400; white-space: nowrap; }
+.mgp-numbers { display: flex; flex-direction: column; gap: 3px; text-align: right; white-space: nowrap; }
+.mgp-numbers .lbl { color: var(--fg-mute); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; }
+.mgp-bal { font-family: var(--font-display); font-size: 17px; font-weight: 500; letter-spacing: -0.015em; white-space: nowrap; }
+.mgp-bal.pos { color: var(--mint); }
+.mgp-bal.neg { color: var(--rose); }
+
+/* Año colapsable */
+.year-group {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+.year-group.open { background: var(--bg-2); }
+.year-head {
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 18px;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+.year-totals { white-space: nowrap; }
+.year-bal { white-space: nowrap; }
+.year-head:hover { background: var(--card-hi); }
+.year-chev { color: var(--fg-mute); font-size: 14px; transition: transform 0.2s; width: 16px; text-align: center; }
+.year-group.open .year-chev { transform: rotate(90deg); }
+.year-nombre { font-family: var(--font-display); font-size: 22px; font-weight: 400; letter-spacing: -0.02em; }
+.year-meses { color: var(--fg-mute); font-size: 12px; }
+.year-totals { display: flex; flex-direction: column; gap: 2px; text-align: right; font-size: 12px; }
+.year-totals .i { color: var(--mint); }
+.year-totals .e { color: var(--peach); }
+.year-bal { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: -0.015em; }
+.year-bal.pos { color: var(--mint); }
+.year-bal.neg { color: var(--rose); }
+.year-body { display: none; padding: 4px 10px 14px; }
+.year-group.open .year-body { display: block; animation: slideDown 0.3s ease; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+.mini-mes {
+  display: grid;
+  grid-template-columns: minmax(80px, 1fr) auto auto;
+  gap: 18px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.mini-mes:hover { background: var(--card); }
+.mm-nombre { font-size: 14px; text-transform: none; }
+.mm-nums { font-family: var(--font-display); font-size: 13px; display: flex; gap: 10px; white-space: nowrap; }
+.mm-nums .i { color: var(--mint); }
+.mm-nums .e { color: var(--peach); }
+.mm-bal { font-family: var(--font-display); font-weight: 500; font-size: 14px; letter-spacing: -0.01em; min-width: 70px; text-align: right; white-space: nowrap; }
+.mm-bal.pos { color: var(--mint); }
+.mm-bal.neg { color: var(--rose); }
+
+.foot-new { text-align: center; padding: 60px 0 20px; color: var(--fg-mute); font-size: 12px; }
+.foot-new a { color: var(--fg-dim); text-decoration: underline; text-decoration-color: var(--fg-mute); }
+
+/* ═══ THEME SWITCHER ═══ */
+.theme-fab {
+  position: fixed; bottom: 20px; left: 20px; z-index: 800;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--card-hi); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.theme-fab:hover { transform: scale(1.06); background: var(--card-hi); }
+.theme-fab svg { width: 24px; height: 24px; }
+
+.theme-panel {
+  position: fixed; bottom: 80px; left: 20px; z-index: 850;
+  width: 280px; max-height: 70vh; overflow-y: auto;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: 20px; padding: 20px;
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  display: none; animation: panelIn 0.3s cubic-bezier(0.2,0.8,0.25,1);
+}
+.theme-panel.open { display: block; }
+@keyframes panelIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.theme-panel h4 {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--fg-mute); margin-bottom: 14px; font-weight: 600;
+}
+.theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.theme-option {
+  border-radius: 14px; padding: 12px 14px;
+  cursor: pointer; transition: all 0.2s;
+  border: 1.5px solid transparent; overflow: hidden; position: relative;
+}
+.theme-option:hover { transform: translateY(-2px); }
+.theme-option.active { border-color: var(--fg); box-shadow: 0 0 0 2px var(--card-hi); }
+.theme-option .name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.theme-option .sub { font-family: var(--font-serif); font-style: italic; font-size: 11px; opacity: 0.6; }
+.theme-option .dots { display: flex; gap: 3px; margin-top: 8px; }
+.theme-option .dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* Previsualización por tema del botón */
+.theme-option.preview-signature { background: linear-gradient(135deg, #1a1823, #2a1f3d); color: #ece9f2; }
+.theme-option.preview-daylight { background: linear-gradient(135deg, #f5ead5, #ece4d6); color: #1a1823; }
+.theme-option.preview-lux { background: linear-gradient(135deg, #000, #1a1a1a); color: #fff8e0; }
+.theme-option.preview-garden { background: linear-gradient(135deg, #253d2a, #1a2e1f); color: #f5ead5; }
+.theme-option.preview-sunset { background: linear-gradient(135deg, #3d1a1a, #2a0f0f); color: #fff3e0; }
+.theme-option.preview-nordic { background: linear-gradient(135deg, #ffffff, #f7f6f4); color: #1e1e24; }
+.theme-option.preview-arcade { background: linear-gradient(135deg, #000, #1a1a1a); color: #fff; }
+.theme-option.preview-pastel { background: linear-gradient(135deg, #ede4f2, #f5e8ed); color: #3d2e4a; }
+.theme-option.preview-contrast { background: #fff; color: #000; border-color: #000; }
+</style>
+</head>
+<body><div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#ff5ca8;color:#0f0d16;padding:8px 16px;text-align:center;font-family:system-ui,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;">⚠️ PREVIEW · datos ficticios · sin cifrado · solo para diseño</div>
+
+<!-- Filtro goo para el logo Liquid -->
+<svg class="goo-filter" width="0" height="0">
+  <defs>
+    <filter id="goo-claridad">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="goo"/>
+      <feBlend in="SourceGraphic" in2="goo"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- LOGIN -->
+<div class="lock" id="lock">
+  <svg class="lock-mark liquid-mark" viewBox="-60 -60 120 120">
+    <circle class="liq-orb1" r="22" fill="#ff5ca8"/>
+    <circle class="liq-orb2" r="20" fill="#5aff9c"/>
+    <circle class="liq-orb3" r="23" fill="#c9b8e8"/>
+    <circle class="liq-orb4" r="13" fill="#ece9f2"/>
+  </svg>
+  <div class="lock-logo">Clar<em>i</em>dad</div>
+  <input type="password" class="lock-input" id="pw" placeholder="contraseña" autofocus>
+  <button class="lock-btn" id="unlock-btn">Entrar</button>
+  <div class="lock-err" id="err"></div>
+  <div class="lock-hint">cifrado end-to-end</div>
+</div>
+
+<!-- APP -->
+<div class="app hidden" id="app">
+
+  <section class="hero">
+    <svg class="hero-mark-mini liquid-mark" viewBox="-60 -60 120 120">
+      <circle class="liq-orb1" r="22" fill="#ff5ca8"/>
+      <circle class="liq-orb2" r="20" fill="#5aff9c"/>
+      <circle class="liq-orb3" r="23" fill="#c9b8e8"/>
+      <circle class="liq-orb4" r="13" fill="#ece9f2"/>
+    </svg>
+    <div class="hero-sub">Hola Daniel · <span id="hero-year-sub">—</span></div>
+    <h1 class="hero-title">Tu <em>dinero</em>,<br>mes a mes</h1>
+    <div class="kpi-row" id="kpi-row"></div>
+  </section>
+
+  <section id="feed"></section>
+
+  <div class="foot-new">
+    <svg class="liquid-mark" viewBox="-60 -60 120 120" style="width:28px;height:28px;vertical-align:middle;margin-right:6px;opacity:0.8;">
+      <circle class="liq-orb1" r="22" fill="#ff5ca8"/>
+      <circle class="liq-orb2" r="20" fill="#5aff9c"/>
+      <circle class="liq-orb3" r="23" fill="#c9b8e8"/>
+      <circle class="liq-orb4" r="13" fill="#ece9f2"/>
+    </svg>
+    Clar<em style="font-family:var(--font-serif);font-style:italic;color:var(--pink);">i</em>dad
+    · actualizado <span id="fecha-build">hoy</span>
+    &middot; <a href="Dashboard_Seguro.html">dashboard completo</a>
+  </div>
+
+</div>
+
+<!-- THEME SWITCHER -->
+<button class="theme-fab hidden" id="theme-fab" aria-label="Cambiar tema">
+  <svg viewBox="-60 -60 120 120" class="liquid-mark">
+    <circle class="liq-orb1" r="22" fill="var(--pink)"/>
+    <circle class="liq-orb2" r="20" fill="var(--mint)"/>
+    <circle class="liq-orb3" r="23" fill="var(--lavender)"/>
+    <circle class="liq-orb4" r="13" fill="var(--fg)"/>
+  </svg>
+</button>
+<div class="theme-panel" id="theme-panel">
+  <h4>🎨 Tema</h4>
+  <div class="theme-grid">
+    <div class="theme-option preview-signature" data-theme="signature">
+      <div class="name">Signature</div><div class="sub">plum + neón</div>
+      <div class="dots"><span class="dot" style="background:#ff5ca8"></span><span class="dot" style="background:#5aff9c"></span><span class="dot" style="background:#c9b8e8"></span></div>
+    </div>
+    <div class="theme-option preview-daylight" data-theme="daylight">
+      <div class="name">Daylight</div><div class="sub">crema · light</div>
+      <div class="dots"><span class="dot" style="background:#d94a6b"></span><span class="dot" style="background:#3d9d6a"></span><span class="dot" style="background:#7d5ec4"></span></div>
+    </div>
+    <div class="theme-option preview-lux" data-theme="lux">
+      <div class="name">Midnight Lux</div><div class="sub">premium dorado</div>
+      <div class="dots"><span class="dot" style="background:#e8c979"></span><span class="dot" style="background:#c9b8e8"></span><span class="dot" style="background:#f5dea3"></span></div>
+    </div>
+    <div class="theme-option preview-garden" data-theme="garden">
+      <div class="name">Garden</div><div class="sub">verdes orgánico</div>
+      <div class="dots"><span class="dot" style="background:#8fba6a"></span><span class="dot" style="background:#d4a574"></span><span class="dot" style="background:#c77b4e"></span></div>
+    </div>
+    <div class="theme-option preview-sunset" data-theme="sunset">
+      <div class="name">Sunset</div><div class="sub">coral latino</div>
+      <div class="dots"><span class="dot" style="background:#ff6b4a"></span><span class="dot" style="background:#ffb347"></span><span class="dot" style="background:#ff8fa3"></span></div>
+    </div>
+    <div class="theme-option preview-nordic" data-theme="nordic">
+      <div class="name">Nordic</div><div class="sub">calmo blanco</div>
+      <div class="dots"><span class="dot" style="background:#4a6fa5"></span><span class="dot" style="background:#8aa3c4"></span><span class="dot" style="background:#d4dde8"></span></div>
+    </div>
+    <div class="theme-option preview-arcade" data-theme="arcade">
+      <div class="name">Arcade</div><div class="sub">Y2K neón</div>
+      <div class="dots"><span class="dot" style="background:#ff00d4"></span><span class="dot" style="background:#00f0ff"></span><span class="dot" style="background:#fff300"></span></div>
+    </div>
+    <div class="theme-option preview-pastel" data-theme="pastel">
+      <div class="name">Pastel Soft</div><div class="sub">suave accesible</div>
+      <div class="dots"><span class="dot" style="background:#f2a8c5"></span><span class="dot" style="background:#a8d8c5"></span><span class="dot" style="background:#c5b8e8"></span></div>
+    </div>
+    <div class="theme-option preview-contrast" data-theme="contrast">
+      <div class="name">High Contrast</div><div class="sub">B&amp;W editorial</div>
+      <div class="dots"><span class="dot" style="background:#000"></span><span class="dot" style="background:#d9ff4a"></span><span class="dot" style="background:#222"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SHEET DETALLE MES -->
+<div class="sheet-backdrop" id="sheet-backdrop"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="sheet-head">
+    <div class="sheet-close" id="sheet-close">✕</div>
+    <div class="sheet-mes-sub">Detalle del mes</div>
+    <div class="sheet-mes" id="sheet-mes">—</div>
+  </div>
+  <div class="sheet-body" id="sheet-body"></div>
+</div>
+
+<script>
+const ENC = {"salt":"","nonce":"","ct":"","iters":1};
+
+// Cifrado
+async function deriveKey(pw, salt, iters) {
+  const enc = new TextEncoder();
+  const mat = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: iters, hash: 'SHA-256' },
+    mat,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['decrypt']
+  );
+}
+async function decrypt(pw) {
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const key = await deriveKey(pw, b64(ENC.salt), ENC.iters);
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(ENC.nonce) }, key, b64(ENC.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+document.getElementById('unlock-btn').addEventListener('click', tryUnlock);
+document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+async function tryUnlock() {
+  const pw = document.getElementById('pw').value;
+  const err = document.getElementById('err');
+  err.textContent = '';
+  try {
+    const data = await decrypt(pw);
+    document.getElementById('lock').style.display = 'none';
+    document.getElementById('app').classList.remove('hidden');
+    document.getElementById('theme-fab').classList.remove('hidden');
+    render(data);
+  } catch (e) {
+    err.textContent = 'Contraseña incorrecta';
+    document.getElementById('pw').value = '';
+  }
+}
+
+// ═══ THEME SWITCHER ═══
+const THEMES = ['signature','daylight','lux','garden','sunset','nordic','arcade','pastel','contrast'];
+function applyTheme(name) {
+  if (!THEMES.includes(name)) name = 'signature';
+  document.body.className = document.body.className.replace(/theme-\w+/g, '').trim() + ' theme-' + name;
+  try { localStorage.setItem('claridad-theme', name); } catch(e) {}
+  document.querySelectorAll('.theme-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.theme === name);
+  });
+}
+// Cargar tema guardado al inicio
+(function initTheme(){
+  try {
+    const saved = localStorage.getItem('claridad-theme') || 'signature';
+    applyTheme(saved);
+  } catch(e) { applyTheme('signature'); }
+})();
+// Toggle panel
+document.getElementById('theme-fab').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('theme-panel').classList.toggle('open');
+});
+// Cerrar al click fuera
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('theme-panel');
+  if (!panel.contains(e.target) && !e.target.closest('#theme-fab')) {
+    panel.classList.remove('open');
+  }
+});
+// Elegir tema
+document.querySelectorAll('.theme-option').forEach(el => {
+  el.addEventListener('click', () => {
+    applyTheme(el.dataset.theme);
+    setTimeout(() => document.getElementById('theme-panel').classList.remove('open'), 180);
+  });
+});
+
+// Formato
+const fmtCOP = v => '$' + Math.round(v).toLocaleString('es-CO');
+// Redondeado corto para espacios chicos: $58,4M, $1,2MM
+const fmtShort = v => {
+  const abs = Math.abs(v);
+  const sign = v < 0 ? '-' : '';
+  if (abs >= 1e9) return sign + '$' + (abs/1e9).toFixed(2).replace('.',',').replace(/,?0+$/,'') + 'MM';
+  if (abs >= 1e6) return sign + '$' + (abs/1e6).toFixed(1).replace('.',',').replace(',0','') + 'M';
+  if (abs >= 1e3) return sign + '$' + (abs/1e3).toFixed(0) + 'k';
+  return sign + '$' + abs.toFixed(0);
+};
+const MES_NOMBRES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const mesBonito = s => { const [y,m] = s.split('-'); return MES_NOMBRES[+m-1] + ' ' + y; };
+
+// ========= ESTADO =========
+let DATA = null;
+
+// ========= RENDER PRINCIPAL =========
+function render(D) {
+  DATA = D;
+  document.getElementById('fecha-build').textContent = new Date().toLocaleDateString('es-CO', {day:'numeric', month:'long', year:'numeric'});
+
+  // Hero: año actual KPIs
+  const todos = D.todos_meses.slice().sort();   // asc
+  const reciente = todos[todos.length - 1];
+  const yearAct = reciente.slice(0, 4);
+  document.getElementById('hero-year-sub').textContent = `hoy es ${new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long'})}`;
+
+  const mesesAct = todos.filter(m => m.startsWith(yearAct));
+  let ing=0, egr=0;
+  mesesAct.forEach(m => { const d = D.meses_detalle[m]; if (d) { ing += d.ingresos; egr += d.egresos; } });
+  const bal = ing - egr;
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi ingreso">
+      <div class="kpi-lbl">Ingresos ${yearAct}</div>
+      <div class="kpi-val">${fmtCOP(ing)}</div>
+      <div class="kpi-sub">${mesesAct.length} ${mesesAct.length===1?'mes':'meses'} registrados</div>
+    </div>
+    <div class="kpi egreso">
+      <div class="kpi-lbl">Egresos ${yearAct}</div>
+      <div class="kpi-val">${fmtCOP(egr)}</div>
+      <div class="kpi-sub">gasto + impuestos + nómina</div>
+    </div>
+    <div class="kpi balance">
+      <div class="kpi-lbl">Balance</div>
+      <div class="kpi-val" style="color:${bal>=0?'var(--mint)':'var(--rose)'}">${bal>=0?'+':'−'}${fmtCOP(Math.abs(bal))}</div>
+      <div class="kpi-sub">${bal>=0?'positivo':'negativo'}</div>
+    </div>`;
+
+  // FEED JERÁRQUICO
+  const feed = document.getElementById('feed');
+  const detallados = todos.slice(-2);                           // últimos 2 meses: detallados
+  const restoYearAct = mesesAct.filter(m => !detallados.includes(m));
+  const yearsPrevios = [...new Set(todos.filter(m => !m.startsWith(yearAct)).map(m => m.slice(0,4)))].reverse();
+
+  let html = '';
+
+  // 1. Últimos 2 meses (grandes, clickables)
+  if (detallados.length) {
+    html += `<div class="feed-section">
+      <div class="feed-label">Últimos meses</div>
+      ${detallados.slice().reverse().map(m => cardMesGrande(m, m === reciente)).join('')}
+    </div>`;
+  }
+
+  // 2. Resto del año actual agrupado de 3 en 3 (trimestres)
+  if (restoYearAct.length) {
+    const grupos = agruparTrimestres(restoYearAct);
+    html += `<div class="feed-section">
+      <div class="feed-label">Trimestres de ${yearAct}</div>
+      ${grupos.map(g => cardGrupo(g)).join('')}
+    </div>`;
+  }
+
+  // 3. Años previos colapsables
+  if (yearsPrevios.length) {
+    html += `<div class="feed-section">
+      <div class="feed-label">Años anteriores</div>
+      ${yearsPrevios.map(y => cardAnoCollapse(y)).join('')}
+    </div>`;
+  }
+
+  feed.innerHTML = html;
+
+  // Listeners
+  feed.querySelectorAll('[data-mes]').forEach(el => el.addEventListener('click', () => openSheet(el.dataset.mes)));
+  feed.querySelectorAll('[data-grupo]').forEach(el => el.addEventListener('click', () => openSheetGrupo(JSON.parse(el.dataset.grupo))));
+  feed.querySelectorAll('.year-head').forEach(h => {
+    h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+  });
+
+  // Sheet close
+  document.getElementById('sheet-close').addEventListener('click', closeSheet);
+  document.getElementById('sheet-backdrop').addEventListener('click', closeSheet);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+}
+
+// ========= HELPERS DE RENDER =========
+function cardMesGrande(m, esReciente) {
+  const d = DATA.meses_detalle[m];
+  if (!d) return '';
+  const [yy, mm] = m.split('-');
+  const bal = d.ingresos - d.egresos;
+  return `
+    <div class="mes-grande ${esReciente?'actual':''}" data-mes="${m}">
+      <div class="mg-head">
+        <div><span class="mg-nombre">${MES_NOMBRES_LARGO[+mm-1]}</span><span class="mg-year">${yy}</span></div>
+      </div>
+      <div class="mg-stats">
+        <div class="mg-stat ingreso">
+          <div class="mg-stat-lbl">Ingresos</div>
+          <div class="mg-stat-val">${fmtCOP(d.ingresos)}</div>
+        </div>
+        <div class="mg-stat egreso">
+          <div class="mg-stat-lbl">Egresos</div>
+          <div class="mg-stat-val">${fmtCOP(d.egresos)}</div>
+        </div>
+      </div>
+      <div class="mg-bal">
+        <span class="mg-bal-lbl">Balance del mes</span>
+        <span class="mg-bal-val ${bal>=0?'pos':'neg'}">${bal>=0?'+':'−'}${fmtCOP(Math.abs(bal))}</span>
+      </div>
+    </div>`;
+}
+
+function agruparTrimestres(meses) {
+  // Agrupa meses por trimestre calendario. Si un grupo tiene <3 meses, se mantiene así.
+  const porTrim = {};
+  meses.forEach(m => {
+    const [yy, mm] = m.split('-');
+    const q = Math.ceil(+mm/3);
+    const key = `${yy}-Q${q}`;
+    if (!porTrim[key]) porTrim[key] = { yy, q, meses: [] };
+    porTrim[key].meses.push(m);
+  });
+  return Object.values(porTrim).sort((a, b) => (b.yy - a.yy) || (b.q - a.q));
+}
+
+function cardGrupo(g) {
+  let ing = 0, egr = 0;
+  g.meses.forEach(m => { const d = DATA.meses_detalle[m]; if (d) { ing += d.ingresos; egr += d.egresos; } });
+  const bal = ing - egr;
+  const mesesNames = g.meses.map(m => MES_NOMBRES_LARGO[+m.slice(5,7)-1].slice(0,3)).join(' · ');
+  const nombreTrim = `Q${g.q} ${g.yy}`;
+  return `
+    <div class="mes-grupo" data-grupo='${JSON.stringify({nombre:nombreTrim, meses:g.meses}).replace(/'/g,"&#39;")}'>
+      <div>
+        <div class="mgp-nombre">${nombreTrim}</div>
+        <div class="mgp-sub">${mesesNames}</div>
+      </div>
+      <div class="mgp-numbers">
+        <span class="lbl">Ing · Egr</span>
+        <span><span class="mgp-ing">${fmtShort(ing)}</span> <span style="color:var(--fg-mute)">·</span> <span class="mgp-egr">${fmtShort(egr)}</span></span>
+      </div>
+      <div class="mgp-numbers">
+        <span class="lbl">Balance</span>
+        <span class="mgp-bal ${bal>=0?'pos':'neg'}">${bal>=0?'+':'−'}${fmtShort(Math.abs(bal))}</span>
+      </div>
+    </div>`;
+}
+
+function cardAnoCollapse(year) {
+  const meses = DATA.todos_meses.filter(m => m.startsWith(year)).sort().reverse();
+  let ing = 0, egr = 0;
+  meses.forEach(m => { const d = DATA.meses_detalle[m]; if (d) { ing += d.ingresos; egr += d.egresos; } });
+  const bal = ing - egr;
+  const inner = meses.map(m => miniMes(m)).join('');
+  return `
+    <div class="year-group">
+      <div class="year-head">
+        <span class="year-chev">▶</span>
+        <div>
+          <span class="year-nombre">${year}</span>
+          <div class="year-meses">${meses.length} meses</div>
+        </div>
+        <div class="year-totals">
+          <span class="i">+${fmtShort(ing)}</span>
+          <span class="e">−${fmtShort(egr)}</span>
+        </div>
+        <div class="year-bal ${bal>=0?'pos':'neg'}">${bal>=0?'+':'−'}${fmtShort(Math.abs(bal))}</div>
+      </div>
+      <div class="year-body">${inner}</div>
+    </div>`;
+}
+
+function miniMes(m) {
+  const d = DATA.meses_detalle[m];
+  if (!d) return '';
+  const [yy, mm] = m.split('-');
+  const bal = d.ingresos - d.egresos;
+  return `
+    <div class="mini-mes" data-mes="${m}">
+      <div class="mm-nombre">${MES_NOMBRES_LARGO[+mm-1]}</div>
+      <div class="mm-nums">
+        <span class="i">+${fmtShort(d.ingresos)}</span>
+        <span class="e">−${fmtShort(d.egresos)}</span>
+      </div>
+      <div class="mm-bal ${bal>=0?'pos':'neg'}">${bal>=0?'+':'−'}${fmtShort(Math.abs(bal))}</div>
+    </div>`;
+}
+
+// Abrir sheet para un grupo (trimestre) con totales agregados + mini-cards de meses
+function openSheetGrupo(g) {
+  // Suma los meses del grupo (tx fusionadas manteniendo agrupación canónica)
+  let ing = 0, egr = 0;
+  const gruposI = {}, gruposE = {};
+  g.meses.forEach(m => {
+    const d = DATA.meses_detalle[m];
+    if (!d) return;
+    ing += d.ingresos;
+    egr += d.egresos;
+    const mergeGrp = (acc, arr) => {
+      (arr||[]).forEach(grp => {
+        if (!acc[grp.grupo_gordo]) acc[grp.grupo_gordo] = {grupo_gordo: grp.grupo_gordo, total: 0, n: 0, sub: {}};
+        const a = acc[grp.grupo_gordo];
+        a.total += grp.total;
+        a.n += grp.n;
+        (grp.sub||[]).forEach(s => {
+          if (!a.sub[s.titulo]) a.sub[s.titulo] = {titulo: s.titulo, total: 0, n: 0, primera: s.primera, ultima: s.ultima, cat: s.cat, tx: []};
+          const ss = a.sub[s.titulo];
+          ss.total += s.total;
+          ss.n += s.n;
+          if (s.primera < ss.primera) ss.primera = s.primera;
+          if (s.ultima > ss.ultima) ss.ultima = s.ultima;
+          ss.tx.push(...(s.tx||[]));
+        });
+      });
+    };
+    mergeGrp(gruposI, d.grupos_ingreso);
+    mergeGrp(gruposE, d.grupos_egreso);
+  });
+
+  const finalize = (accum) => Object.values(accum)
+    .map(g => ({...g, sub: Object.values(g.sub).sort((a,b)=>b.total-a.total)}))
+    .sort((a,b)=>b.total-a.total);
+
+  const fakeDetalle = {
+    ingresos: ing, egresos: egr,
+    grupos_ingreso: finalize(gruposI),
+    grupos_egreso: finalize(gruposE),
+    meses_del_grupo: g.meses,  // bandera para mostrar mini-cards
+  };
+
+  renderSheetContent(g.nombre, fakeDetalle);
+}
+
+// ========= SHEET (DETALLE MES O GRUPO) =========
+function openSheet(mes) {
+  const d = DATA.meses_detalle[mes];
+  if (!d) return;
+  const [yy, mm] = mes.split('-');
+  renderSheetContent(MES_NOMBRES_LARGO[+mm-1] + ' ' + yy, d);
+}
+
+function renderSheetContent(titulo, d) {
+  document.getElementById('sheet-mes').textContent = titulo;
+  const bal = d.ingresos - d.egresos;
+  const balCls = bal >= 0 ? '' : 'neg';
+  const balLbl = bal >= 0 ? 'Ahorraste' : 'Gastaste de más';
+
+  const gruposI = (d.grupos_ingreso || []).filter(g => g.total > 0);
+  const gruposE = (d.grupos_egreso || []).filter(g => g.total > 0);
+  const maxI = Math.max(...gruposI.map(g => g.total), 1);
+  const maxE = Math.max(...gruposE.map(g => g.total), 1);
+
+  const renderGrupoItem = (g, tipo, max) => {
+    const colorCls = tipo === 'ingreso' ? 'mint' : 'peach';
+    const subs = g.sub || [];
+    const subHtml = subs.map(s => {
+      const etiqueta = s.n > 1
+        ? `<span class="grupo-tx-meta">${s.n} tx · ${s.primera === s.ultima ? s.primera : s.primera + ' → ' + s.ultima}</span>`
+        : `<span class="grupo-tx-meta">${s.primera}${s.cat ? ' · ' + escapeHtml(s.cat) : ''}</span>`;
+      return `
+        <div class="grupo-tx-item">
+          <div>
+            <div class="grupo-tx-desc">${escapeHtml(s.titulo)}${s.n > 1 ? ` <span class="sub-count">×${s.n}</span>` : ''}</div>
+            ${etiqueta}
+          </div>
+          <div class="grupo-tx-monto">${fmtCOP(s.total)}</div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="grupo-item ${tipo}">
+        <div class="grupo-chev">▶</div>
+        <div class="grupo-name">${g.grupo_gordo}<span class="grupo-n">${g.n} tx</span></div>
+        <div class="grupo-monto">${fmtCOP(g.total)}</div>
+        <div class="grupo-bar ${colorCls}"><div class="fill" style="width:${(g.total/max*100).toFixed(0)}%"></div></div>
+        <div class="grupo-tx">${subHtml}</div>
+      </div>`;
+  };
+
+  const iHtml = gruposI.length === 0 ? '<div style="color:var(--fg-mute);font-size:13px;padding:14px 16px">Sin ingresos</div>' :
+    gruposI.map(g => renderGrupoItem(g, 'ingreso', maxI)).join('');
+  const eHtml = gruposE.length === 0 ? '<div style="color:var(--fg-mute);font-size:13px;padding:14px 16px">Sin egresos</div>' :
+    gruposE.map(g => renderGrupoItem(g, 'egreso', maxE)).join('');
+
+  const top = d.top_tx_egreso || [];
+  const topHtml = top.length === 0 ? '' : `
+    <div class="section-h"><span class="swatch peach"></span>Top gastos</div>
+    <div class="tx-list">
+      ${top.map(t => `
+        <div class="tx-item">
+          <div>
+            <div class="tx-desc">${escapeHtml(prettyDesc(t.descripcion))}</div>
+            <div class="tx-meta"><span class="tag">${t.grupo_gordo}</span>${t.fecha}</div>
+          </div>
+          <div class="tx-monto">${fmtCOP(t.monto)}</div>
+        </div>`).join('')}
+    </div>`;
+
+  // Si viene de un trimestre, mostrar mini-cards de meses al inicio
+  const mesesHtml = (d.meses_del_grupo && d.meses_del_grupo.length > 1) ? `
+    <div class="section-h"><span class="swatch lavender"></span>Meses del trimestre</div>
+    <div class="meses-mini">
+      ${d.meses_del_grupo.slice().reverse().map(m => {
+        const dm = DATA.meses_detalle[m];
+        if (!dm) return '';
+        const [yy, mm] = m.split('-');
+        const bm = dm.ingresos - dm.egresos;
+        return `
+          <div class="mes-mini" data-mes="${m}">
+            <div class="mm-head"><span class="mm-title">${MES_NOMBRES_LARGO[+mm-1]}</span><span class="mm-year">${yy}</span></div>
+            <div class="mm-row"><span>ing</span><span class="mm-i">${fmtShort(dm.ingresos)}</span></div>
+            <div class="mm-row"><span>egr</span><span class="mm-e">${fmtShort(dm.egresos)}</span></div>
+            <div class="mm-row mm-bal-row"><span>balance</span><span class="mm-b ${bm>=0?'pos':'neg'}">${bm>=0?'+':'−'}${fmtShort(Math.abs(bm))}</span></div>
+          </div>`;
+      }).join('')}
+    </div>
+  ` : '';
+
+  document.getElementById('sheet-body').innerHTML = `
+    <div class="sheet-summary">
+      <div class="sheet-stat ingreso">
+        <div class="sheet-stat-lbl">Ingresos</div>
+        <div class="sheet-stat-val">${fmtCOP(d.ingresos)}</div>
+        <div class="sheet-stat-sub">${(d.grupos_ingreso||[]).reduce((a,g)=>a+g.n,0)} transacciones</div>
+      </div>
+      <div class="sheet-stat egreso">
+        <div class="sheet-stat-lbl">Egresos</div>
+        <div class="sheet-stat-val">${fmtCOP(d.egresos)}</div>
+        <div class="sheet-stat-sub">${(d.grupos_egreso||[]).reduce((a,g)=>a+g.n,0)} transacciones</div>
+      </div>
+    </div>
+    <div class="sheet-balance ${balCls}">
+      <span class="sheet-balance-lbl">${balLbl}</span>
+      <span class="sheet-balance-val">${bal>=0?'+':'−'}${fmtCOP(Math.abs(bal))}</span>
+    </div>
+    ${mesesHtml}
+    <div class="section-h"><span class="swatch mint"></span>De dónde entró el dinero</div>
+    <div class="grupos-list">${iHtml}</div>
+    <div class="section-h"><span class="swatch peach"></span>En qué salió el dinero</div>
+    <div class="grupos-list">${eHtml}</div>
+  `;
+
+  document.getElementById('sheet-backdrop').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Listeners para expandir grupos al click
+  document.querySelectorAll('.grupo-item').forEach(el => {
+    el.addEventListener('click', () => el.classList.toggle('open'));
+  });
+  // Listeners para mini-cards de meses (drill-down desde trimestre)
+  document.querySelectorAll('.mes-mini').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSheet(el.dataset.mes);
+    });
+  });
+}
+
+function closeSheet() {
+  document.getElementById('sheet-backdrop').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ========= UTILIDADES =========
+const MES_NOMBRES_LARGO = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+function prettyDesc(s) {
+  if (!s) return '';
+  let t = s.replace(/\s*\[\*\d+\]\s*a:\d+\s*/g, ' ')
+           .replace(/\s*de:[A-ZÑÁÉÍÓÚ ]+\s*/g, ' ')
+           .replace(/con tus movimientos Bancolombia:\s*/gi, '')
+           .trim();
+  if (t.length > 90) t = t.slice(0, 88) + '…';
+  return t;
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+</script>
+<script>
+window.__CLARIDAD_PREVIEW_DATA__ = {"meta": {"inicio": "2025-01-01", "fin": "2026-04-30", "total": 2400, "meses": 16, "hoy": "2026-04-18", "correos_mes_actual": 42}, "mes_actual": "2026-04", "todos_meses": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04"], "anos_disponibles": ["2026", "2025"], "meses_detalle": {"2025-01": {"mes": "2025-01", "ingresos": 50033905, "egresos": 51861925, "balance": -1828020, "n_tx": 141, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 22515257.25, "n": 1, "sub": [{"titulo": "Oficina A", "total": 22515257.25, "n": 1, "primera": "2025-01-15", "ultima": "2025-01-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-01-15", "desc": "Pago mensual oficina A", "monto": 22515257.25, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 15010171.5, "n": 1, "sub": [{"titulo": "Local B", "total": 15010171.5, "n": 1, "primera": "2025-01-10", "ultima": "2025-01-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 7505085.75, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 5003390.5, "n": 2, "primera": "2025-01-05", "ultima": "2025-01-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2501695.25, "n": 1, "primera": "2025-01-20", "ultima": "2025-01-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 5003390.5, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 5003390.5, "n": 1, "primera": "2025-01-01", "ultima": "2025-01-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 12965481.25, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 9335146.5, "n": 1, "primera": "2025-01-05", "ultima": "2025-01-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2593096.25, "n": 1, "primera": "2025-01-08", "ultima": "2025-01-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 1037238.5, "n": 1, "primera": "2025-01-12", "ultima": "2025-01-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 7779288.75, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 4148954.0, "n": 12, "primera": "2025-01-02", "ultima": "2025-01-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3630334.7500000005, "n": 6, "primera": "2025-01-03", "ultima": "2025-01-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 6223431.0, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2593096.25, "n": 3, "primera": "2025-01-01", "ultima": "2025-01-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3630334.7500000005, "n": 2, "primera": "2025-01-14", "ultima": "2025-01-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 5186192.5, "n": 6, "sub": [{"titulo": "Supermercado", "total": 5186192.5, "n": 6, "primera": "2025-01-05", "ultima": "2025-01-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 4148954.0, "n": 4, "sub": [{"titulo": "EPS", "total": 2593096.25, "n": 1, "primera": "2025-01-03", "ultima": "2025-01-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1555857.75, "n": 3, "primera": "2025-01-10", "ultima": "2025-01-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2593096.25, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2593096.25, "n": 8, "primera": "2025-01-01", "ultima": "2025-01-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 4148954.0, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 4148954.0, "n": 2, "primera": "2025-01-12", "ultima": "2025-01-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 8816527.25, "n": 12, "sub": [{"titulo": "Varios", "total": 8816527.25, "n": 12, "primera": "2025-01-02", "ultima": "2025-01-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-02": {"mes": "2025-02", "ingresos": 60451772, "egresos": 44961305, "balance": 15490467, "n_tx": 147, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 27203297.400000002, "n": 1, "sub": [{"titulo": "Oficina A", "total": 27203297.400000002, "n": 1, "primera": "2025-02-15", "ultima": "2025-02-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-02-15", "desc": "Pago mensual oficina A", "monto": 27203297.400000002, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 18135531.599999998, "n": 1, "sub": [{"titulo": "Local B", "total": 18135531.599999998, "n": 1, "primera": "2025-02-10", "ultima": "2025-02-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 9067765.799999999, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 6045177.2, "n": 2, "primera": "2025-02-05", "ultima": "2025-02-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 3022588.6, "n": 1, "primera": "2025-02-20", "ultima": "2025-02-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 6045177.2, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 6045177.2, "n": 1, "primera": "2025-02-01", "ultima": "2025-02-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 11240326.25, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 8093034.899999999, "n": 1, "primera": "2025-02-05", "ultima": "2025-02-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2248065.25, "n": 1, "primera": "2025-02-08", "ultima": "2025-02-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 899226.1, "n": 1, "primera": "2025-02-12", "ultima": "2025-02-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 6744195.75, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3596904.4, "n": 12, "primera": "2025-02-02", "ultima": "2025-02-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3147291.35, "n": 6, "primera": "2025-02-03", "ultima": "2025-02-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5395356.6, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2248065.25, "n": 3, "primera": "2025-02-01", "ultima": "2025-02-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3147291.35, "n": 2, "primera": "2025-02-14", "ultima": "2025-02-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4496130.5, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4496130.5, "n": 6, "primera": "2025-02-05", "ultima": "2025-02-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3596904.4, "n": 4, "sub": [{"titulo": "EPS", "total": 2248065.25, "n": 1, "primera": "2025-02-03", "ultima": "2025-02-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1348839.15, "n": 3, "primera": "2025-02-10", "ultima": "2025-02-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2248065.25, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2248065.25, "n": 8, "primera": "2025-02-01", "ultima": "2025-02-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3596904.4, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3596904.4, "n": 2, "primera": "2025-02-12", "ultima": "2025-02-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 7643421.850000001, "n": 12, "sub": [{"titulo": "Varios", "total": 7643421.850000001, "n": 12, "primera": "2025-02-02", "ultima": "2025-02-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-03": {"mes": "2025-03", "ingresos": 51171221, "egresos": 38061428, "balance": 13109793, "n_tx": 187, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 23027049.45, "n": 1, "sub": [{"titulo": "Oficina A", "total": 23027049.45, "n": 1, "primera": "2025-03-15", "ultima": "2025-03-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-03-15", "desc": "Pago mensual oficina A", "monto": 23027049.45, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 15351366.299999999, "n": 1, "sub": [{"titulo": "Local B", "total": 15351366.299999999, "n": 1, "primera": "2025-03-10", "ultima": "2025-03-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 7675683.149999999, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 5117122.100000001, "n": 2, "primera": "2025-03-05", "ultima": "2025-03-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2558561.0500000003, "n": 1, "primera": "2025-03-20", "ultima": "2025-03-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 5117122.100000001, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 5117122.100000001, "n": 1, "primera": "2025-03-01", "ultima": "2025-03-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 9515357.0, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 6851057.04, "n": 1, "primera": "2025-03-05", "ultima": "2025-03-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 1903071.4000000001, "n": 1, "primera": "2025-03-08", "ultima": "2025-03-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 761228.56, "n": 1, "primera": "2025-03-12", "ultima": "2025-03-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 5709214.2, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3044914.24, "n": 12, "primera": "2025-03-02", "ultima": "2025-03-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 2664299.9600000004, "n": 6, "primera": "2025-03-03", "ultima": "2025-03-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 4567371.359999999, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 1903071.4000000001, "n": 3, "primera": "2025-03-01", "ultima": "2025-03-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 2664299.9600000004, "n": 2, "primera": "2025-03-14", "ultima": "2025-03-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 3806142.8000000003, "n": 6, "sub": [{"titulo": "Supermercado", "total": 3806142.8000000003, "n": 6, "primera": "2025-03-05", "ultima": "2025-03-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3044914.24, "n": 4, "sub": [{"titulo": "EPS", "total": 1903071.4000000001, "n": 1, "primera": "2025-03-03", "ultima": "2025-03-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1141842.8399999999, "n": 3, "primera": "2025-03-10", "ultima": "2025-03-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 1903071.4000000001, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 1903071.4000000001, "n": 8, "primera": "2025-03-01", "ultima": "2025-03-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3044914.24, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3044914.24, "n": 2, "primera": "2025-03-12", "ultima": "2025-03-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 6470442.760000001, "n": 12, "sub": [{"titulo": "Varios", "total": 6470442.760000001, "n": 12, "primera": "2025-03-02", "ultima": "2025-03-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-04": {"mes": "2025-04", "ingresos": 57192144, "egresos": 36506616, "balance": 20685528, "n_tx": 126, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 25736464.8, "n": 1, "sub": [{"titulo": "Oficina A", "total": 25736464.8, "n": 1, "primera": "2025-04-15", "ultima": "2025-04-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-04-15", "desc": "Pago mensual oficina A", "monto": 25736464.8, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 17157643.2, "n": 1, "sub": [{"titulo": "Local B", "total": 17157643.2, "n": 1, "primera": "2025-04-10", "ultima": "2025-04-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 8578821.6, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 5719214.4, "n": 2, "primera": "2025-04-05", "ultima": "2025-04-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2859607.2, "n": 1, "primera": "2025-04-20", "ultima": "2025-04-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 5719214.4, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 5719214.4, "n": 1, "primera": "2025-04-01", "ultima": "2025-04-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 9126654.0, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 6571190.88, "n": 1, "primera": "2025-04-05", "ultima": "2025-04-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 1825330.8, "n": 1, "primera": "2025-04-08", "ultima": "2025-04-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 730132.3200000001, "n": 1, "primera": "2025-04-12", "ultima": "2025-04-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 5475992.399999999, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 2920529.2800000003, "n": 12, "primera": "2025-04-02", "ultima": "2025-04-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 2555463.12, "n": 6, "primera": "2025-04-03", "ultima": "2025-04-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 4380793.92, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 1825330.8, "n": 3, "primera": "2025-04-01", "ultima": "2025-04-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 2555463.12, "n": 2, "primera": "2025-04-14", "ultima": "2025-04-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 3650661.6, "n": 6, "sub": [{"titulo": "Supermercado", "total": 3650661.6, "n": 6, "primera": "2025-04-05", "ultima": "2025-04-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 2920529.2800000003, "n": 4, "sub": [{"titulo": "EPS", "total": 1825330.8, "n": 1, "primera": "2025-04-03", "ultima": "2025-04-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1095198.48, "n": 3, "primera": "2025-04-10", "ultima": "2025-04-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 1825330.8, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 1825330.8, "n": 8, "primera": "2025-04-01", "ultima": "2025-04-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 2920529.2800000003, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 2920529.2800000003, "n": 2, "primera": "2025-04-12", "ultima": "2025-04-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 6206124.720000001, "n": 12, "sub": [{"titulo": "Varios", "total": 6206124.720000001, "n": 12, "primera": "2025-04-02", "ultima": "2025-04-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-05": {"mes": "2025-05", "ingresos": 46242762, "egresos": 35796231, "balance": 10446531, "n_tx": 152, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 20809242.900000002, "n": 1, "sub": [{"titulo": "Oficina A", "total": 20809242.900000002, "n": 1, "primera": "2025-05-15", "ultima": "2025-05-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-05-15", "desc": "Pago mensual oficina A", "monto": 20809242.900000002, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 13872828.6, "n": 1, "sub": [{"titulo": "Local B", "total": 13872828.6, "n": 1, "primera": "2025-05-10", "ultima": "2025-05-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 6936414.3, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 4624276.2, "n": 2, "primera": "2025-05-05", "ultima": "2025-05-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2312138.1, "n": 1, "primera": "2025-05-20", "ultima": "2025-05-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 4624276.2, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 4624276.2, "n": 1, "primera": "2025-05-01", "ultima": "2025-05-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 8949057.75, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 6443321.58, "n": 1, "primera": "2025-05-05", "ultima": "2025-05-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 1789811.55, "n": 1, "primera": "2025-05-08", "ultima": "2025-05-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 715924.62, "n": 1, "primera": "2025-05-12", "ultima": "2025-05-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 5369434.649999999, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 2863698.48, "n": 12, "primera": "2025-05-02", "ultima": "2025-05-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 2505736.1700000004, "n": 6, "primera": "2025-05-03", "ultima": "2025-05-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 4295547.72, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 1789811.55, "n": 3, "primera": "2025-05-01", "ultima": "2025-05-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 2505736.1700000004, "n": 2, "primera": "2025-05-14", "ultima": "2025-05-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 3579623.1, "n": 6, "sub": [{"titulo": "Supermercado", "total": 3579623.1, "n": 6, "primera": "2025-05-05", "ultima": "2025-05-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 2863698.48, "n": 4, "sub": [{"titulo": "EPS", "total": 1789811.55, "n": 1, "primera": "2025-05-03", "ultima": "2025-05-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1073886.93, "n": 3, "primera": "2025-05-10", "ultima": "2025-05-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 1789811.55, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 1789811.55, "n": 8, "primera": "2025-05-01", "ultima": "2025-05-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 2863698.48, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 2863698.48, "n": 2, "primera": "2025-05-12", "ultima": "2025-05-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 6085359.2700000005, "n": 12, "sub": [{"titulo": "Varios", "total": 6085359.2700000005, "n": 12, "primera": "2025-05-02", "ultima": "2025-05-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-06": {"mes": "2025-06", "ingresos": 63808996, "egresos": 42588205, "balance": 21220791, "n_tx": 192, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 28714048.2, "n": 1, "sub": [{"titulo": "Oficina A", "total": 28714048.2, "n": 1, "primera": "2025-06-15", "ultima": "2025-06-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-06-15", "desc": "Pago mensual oficina A", "monto": 28714048.2, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 19142698.8, "n": 1, "sub": [{"titulo": "Local B", "total": 19142698.8, "n": 1, "primera": "2025-06-10", "ultima": "2025-06-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 9571349.4, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 6380899.600000001, "n": 2, "primera": "2025-06-05", "ultima": "2025-06-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 3190449.8000000003, "n": 1, "primera": "2025-06-20", "ultima": "2025-06-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 6380899.600000001, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 6380899.600000001, "n": 1, "primera": "2025-06-01", "ultima": "2025-06-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 10647051.25, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 7665876.899999999, "n": 1, "primera": "2025-06-05", "ultima": "2025-06-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2129410.25, "n": 1, "primera": "2025-06-08", "ultima": "2025-06-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 851764.1, "n": 1, "primera": "2025-06-12", "ultima": "2025-06-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 6388230.75, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3407056.4, "n": 12, "primera": "2025-06-02", "ultima": "2025-06-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 2981174.35, "n": 6, "primera": "2025-06-03", "ultima": "2025-06-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5110584.6, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2129410.25, "n": 3, "primera": "2025-06-01", "ultima": "2025-06-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 2981174.35, "n": 2, "primera": "2025-06-14", "ultima": "2025-06-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4258820.5, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4258820.5, "n": 6, "primera": "2025-06-05", "ultima": "2025-06-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3407056.4, "n": 4, "sub": [{"titulo": "EPS", "total": 2129410.25, "n": 1, "primera": "2025-06-03", "ultima": "2025-06-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1277646.15, "n": 3, "primera": "2025-06-10", "ultima": "2025-06-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2129410.25, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2129410.25, "n": 8, "primera": "2025-06-01", "ultima": "2025-06-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3407056.4, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3407056.4, "n": 2, "primera": "2025-06-12", "ultima": "2025-06-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 7239994.850000001, "n": 12, "sub": [{"titulo": "Varios", "total": 7239994.850000001, "n": 12, "primera": "2025-06-02", "ultima": "2025-06-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-07": {"mes": "2025-07", "ingresos": 54013717, "egresos": 46919346, "balance": 7094371, "n_tx": 171, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 24306172.650000002, "n": 1, "sub": [{"titulo": "Oficina A", "total": 24306172.650000002, "n": 1, "primera": "2025-07-15", "ultima": "2025-07-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-07-15", "desc": "Pago mensual oficina A", "monto": 24306172.650000002, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 16204115.1, "n": 1, "sub": [{"titulo": "Local B", "total": 16204115.1, "n": 1, "primera": "2025-07-10", "ultima": "2025-07-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 8102057.55, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 5401371.7, "n": 2, "primera": "2025-07-05", "ultima": "2025-07-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2700685.85, "n": 1, "primera": "2025-07-20", "ultima": "2025-07-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 5401371.7, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 5401371.7, "n": 1, "primera": "2025-07-01", "ultima": "2025-07-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 11729836.5, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 8445482.28, "n": 1, "primera": "2025-07-05", "ultima": "2025-07-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2345967.3000000003, "n": 1, "primera": "2025-07-08", "ultima": "2025-07-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 938386.92, "n": 1, "primera": "2025-07-12", "ultima": "2025-07-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 7037901.899999999, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3753547.68, "n": 12, "primera": "2025-07-02", "ultima": "2025-07-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3284354.22, "n": 6, "primera": "2025-07-03", "ultima": "2025-07-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5630321.52, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2345967.3000000003, "n": 3, "primera": "2025-07-01", "ultima": "2025-07-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3284354.22, "n": 2, "primera": "2025-07-14", "ultima": "2025-07-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4691934.600000001, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4691934.600000001, "n": 6, "primera": "2025-07-05", "ultima": "2025-07-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3753547.68, "n": 4, "sub": [{"titulo": "EPS", "total": 2345967.3000000003, "n": 1, "primera": "2025-07-03", "ultima": "2025-07-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1407580.38, "n": 3, "primera": "2025-07-10", "ultima": "2025-07-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2345967.3000000003, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2345967.3000000003, "n": 8, "primera": "2025-07-01", "ultima": "2025-07-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3753547.68, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3753547.68, "n": 2, "primera": "2025-07-12", "ultima": "2025-07-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 7976288.82, "n": 12, "sub": [{"titulo": "Varios", "total": 7976288.82, "n": 12, "primera": "2025-07-02", "ultima": "2025-07-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-08": {"mes": "2025-08", "ingresos": 48644609, "egresos": 47392004, "balance": 1252605, "n_tx": 153, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 21890074.05, "n": 1, "sub": [{"titulo": "Oficina A", "total": 21890074.05, "n": 1, "primera": "2025-08-15", "ultima": "2025-08-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-08-15", "desc": "Pago mensual oficina A", "monto": 21890074.05, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 14593382.7, "n": 1, "sub": [{"titulo": "Local B", "total": 14593382.7, "n": 1, "primera": "2025-08-10", "ultima": "2025-08-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 7296691.35, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 4864460.9, "n": 2, "primera": "2025-08-05", "ultima": "2025-08-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2432230.45, "n": 1, "primera": "2025-08-20", "ultima": "2025-08-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 4864460.9, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 4864460.9, "n": 1, "primera": "2025-08-01", "ultima": "2025-08-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 11848001.0, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 8530560.719999999, "n": 1, "primera": "2025-08-05", "ultima": "2025-08-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2369600.2, "n": 1, "primera": "2025-08-08", "ultima": "2025-08-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 947840.0800000001, "n": 1, "primera": "2025-08-12", "ultima": "2025-08-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 7108800.6, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3791360.3200000003, "n": 12, "primera": "2025-08-02", "ultima": "2025-08-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3317440.2800000003, "n": 6, "primera": "2025-08-03", "ultima": "2025-08-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5687040.4799999995, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2369600.2, "n": 3, "primera": "2025-08-01", "ultima": "2025-08-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3317440.2800000003, "n": 2, "primera": "2025-08-14", "ultima": "2025-08-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4739200.4, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4739200.4, "n": 6, "primera": "2025-08-05", "ultima": "2025-08-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3791360.3200000003, "n": 4, "sub": [{"titulo": "EPS", "total": 2369600.2, "n": 1, "primera": "2025-08-03", "ultima": "2025-08-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1421760.1199999999, "n": 3, "primera": "2025-08-10", "ultima": "2025-08-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2369600.2, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2369600.2, "n": 8, "primera": "2025-08-01", "ultima": "2025-08-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3791360.3200000003, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3791360.3200000003, "n": 2, "primera": "2025-08-12", "ultima": "2025-08-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 8056640.680000001, "n": 12, "sub": [{"titulo": "Varios", "total": 8056640.680000001, "n": 12, "primera": "2025-08-02", "ultima": "2025-08-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-09": {"mes": "2025-09", "ingresos": 59189902, "egresos": 45502435, "balance": 13687467, "n_tx": 158, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 26635455.900000002, "n": 1, "sub": [{"titulo": "Oficina A", "total": 26635455.900000002, "n": 1, "primera": "2025-09-15", "ultima": "2025-09-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-09-15", "desc": "Pago mensual oficina A", "monto": 26635455.900000002, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 17756970.599999998, "n": 1, "sub": [{"titulo": "Local B", "total": 17756970.599999998, "n": 1, "primera": "2025-09-10", "ultima": "2025-09-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 8878485.299999999, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 5918990.2, "n": 2, "primera": "2025-09-05", "ultima": "2025-09-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2959495.1, "n": 1, "primera": "2025-09-20", "ultima": "2025-09-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 5918990.2, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 5918990.2, "n": 1, "primera": "2025-09-01", "ultima": "2025-09-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 11375608.75, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 8190438.3, "n": 1, "primera": "2025-09-05", "ultima": "2025-09-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2275121.75, "n": 1, "primera": "2025-09-08", "ultima": "2025-09-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 910048.7000000001, "n": 1, "primera": "2025-09-12", "ultima": "2025-09-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 6825365.25, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3640194.8000000003, "n": 12, "primera": "2025-09-02", "ultima": "2025-09-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3185170.45, "n": 6, "primera": "2025-09-03", "ultima": "2025-09-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5460292.2, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2275121.75, "n": 3, "primera": "2025-09-01", "ultima": "2025-09-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3185170.45, "n": 2, "primera": "2025-09-14", "ultima": "2025-09-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4550243.5, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4550243.5, "n": 6, "primera": "2025-09-05", "ultima": "2025-09-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3640194.8000000003, "n": 4, "sub": [{"titulo": "EPS", "total": 2275121.75, "n": 1, "primera": "2025-09-03", "ultima": "2025-09-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1365073.05, "n": 3, "primera": "2025-09-10", "ultima": "2025-09-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2275121.75, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2275121.75, "n": 8, "primera": "2025-09-01", "ultima": "2025-09-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3640194.8000000003, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3640194.8000000003, "n": 2, "primera": "2025-09-12", "ultima": "2025-09-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 7735413.95, "n": 12, "sub": [{"titulo": "Varios", "total": 7735413.95, "n": 12, "primera": "2025-09-02", "ultima": "2025-09-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-10": {"mes": "2025-10", "ingresos": 48216243, "egresos": 37105861, "balance": 11110382, "n_tx": 147, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 21697309.35, "n": 1, "sub": [{"titulo": "Oficina A", "total": 21697309.35, "n": 1, "primera": "2025-10-15", "ultima": "2025-10-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-10-15", "desc": "Pago mensual oficina A", "monto": 21697309.35, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 14464872.9, "n": 1, "sub": [{"titulo": "Local B", "total": 14464872.9, "n": 1, "primera": "2025-10-10", "ultima": "2025-10-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 7232436.45, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 4821624.3, "n": 2, "primera": "2025-10-05", "ultima": "2025-10-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2410812.15, "n": 1, "primera": "2025-10-20", "ultima": "2025-10-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 4821624.3, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 4821624.3, "n": 1, "primera": "2025-10-01", "ultima": "2025-10-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 9276465.25, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 6679054.9799999995, "n": 1, "primera": "2025-10-05", "ultima": "2025-10-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 1855293.05, "n": 1, "primera": "2025-10-08", "ultima": "2025-10-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 742117.22, "n": 1, "primera": "2025-10-12", "ultima": "2025-10-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 5565879.149999999, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 2968468.88, "n": 12, "primera": "2025-10-02", "ultima": "2025-10-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 2597410.27, "n": 6, "primera": "2025-10-03", "ultima": "2025-10-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 4452703.32, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 1855293.05, "n": 3, "primera": "2025-10-01", "ultima": "2025-10-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 2597410.27, "n": 2, "primera": "2025-10-14", "ultima": "2025-10-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 3710586.1, "n": 6, "sub": [{"titulo": "Supermercado", "total": 3710586.1, "n": 6, "primera": "2025-10-05", "ultima": "2025-10-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 2968468.88, "n": 4, "sub": [{"titulo": "EPS", "total": 1855293.05, "n": 1, "primera": "2025-10-03", "ultima": "2025-10-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1113175.83, "n": 3, "primera": "2025-10-10", "ultima": "2025-10-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 1855293.05, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 1855293.05, "n": 8, "primera": "2025-10-01", "ultima": "2025-10-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 2968468.88, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 2968468.88, "n": 2, "primera": "2025-10-12", "ultima": "2025-10-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 6307996.37, "n": 12, "sub": [{"titulo": "Varios", "total": 6307996.37, "n": 12, "primera": "2025-10-02", "ultima": "2025-10-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-11": {"mes": "2025-11", "ingresos": 50990069, "egresos": 44931317, "balance": 6058752, "n_tx": 134, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 22945531.05, "n": 1, "sub": [{"titulo": "Oficina A", "total": 22945531.05, "n": 1, "primera": "2025-11-15", "ultima": "2025-11-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-11-15", "desc": "Pago mensual oficina A", "monto": 22945531.05, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 15297020.7, "n": 1, "sub": [{"titulo": "Local B", "total": 15297020.7, "n": 1, "primera": "2025-11-10", "ultima": "2025-11-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 7648510.35, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 5099006.9, "n": 2, "primera": "2025-11-05", "ultima": "2025-11-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2549503.45, "n": 1, "primera": "2025-11-20", "ultima": "2025-11-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 5099006.9, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 5099006.9, "n": 1, "primera": "2025-11-01", "ultima": "2025-11-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 11232829.25, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 8087637.06, "n": 1, "primera": "2025-11-05", "ultima": "2025-11-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2246565.85, "n": 1, "primera": "2025-11-08", "ultima": "2025-11-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 898626.34, "n": 1, "primera": "2025-11-12", "ultima": "2025-11-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 6739697.55, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3594505.36, "n": 12, "primera": "2025-11-02", "ultima": "2025-11-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3145192.1900000004, "n": 6, "primera": "2025-11-03", "ultima": "2025-11-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5391758.04, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2246565.85, "n": 3, "primera": "2025-11-01", "ultima": "2025-11-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3145192.1900000004, "n": 2, "primera": "2025-11-14", "ultima": "2025-11-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4493131.7, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4493131.7, "n": 6, "primera": "2025-11-05", "ultima": "2025-11-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3594505.36, "n": 4, "sub": [{"titulo": "EPS", "total": 2246565.85, "n": 1, "primera": "2025-11-03", "ultima": "2025-11-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1347939.51, "n": 3, "primera": "2025-11-10", "ultima": "2025-11-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2246565.85, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2246565.85, "n": 8, "primera": "2025-11-01", "ultima": "2025-11-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3594505.36, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3594505.36, "n": 2, "primera": "2025-11-12", "ultima": "2025-11-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 7638323.890000001, "n": 12, "sub": [{"titulo": "Varios", "total": 7638323.890000001, "n": 12, "primera": "2025-11-02", "ultima": "2025-11-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2025-12": {"mes": "2025-12", "ingresos": 51851840, "egresos": 43326155, "balance": 8525685, "n_tx": 156, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 23333328.0, "n": 1, "sub": [{"titulo": "Oficina A", "total": 23333328.0, "n": 1, "primera": "2025-12-15", "ultima": "2025-12-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2025-12-15", "desc": "Pago mensual oficina A", "monto": 23333328.0, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 15555552.0, "n": 1, "sub": [{"titulo": "Local B", "total": 15555552.0, "n": 1, "primera": "2025-12-10", "ultima": "2025-12-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 7777776.0, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 5185184.0, "n": 2, "primera": "2025-12-05", "ultima": "2025-12-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2592592.0, "n": 1, "primera": "2025-12-20", "ultima": "2025-12-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 5185184.0, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 5185184.0, "n": 1, "primera": "2025-12-01", "ultima": "2025-12-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 10831538.75, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 7798707.899999999, "n": 1, "primera": "2025-12-05", "ultima": "2025-12-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2166307.75, "n": 1, "primera": "2025-12-08", "ultima": "2025-12-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 866523.1, "n": 1, "primera": "2025-12-12", "ultima": "2025-12-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 6498923.25, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3466092.4, "n": 12, "primera": "2025-12-02", "ultima": "2025-12-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3032830.85, "n": 6, "primera": "2025-12-03", "ultima": "2025-12-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5199138.6, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2166307.75, "n": 3, "primera": "2025-12-01", "ultima": "2025-12-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3032830.85, "n": 2, "primera": "2025-12-14", "ultima": "2025-12-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4332615.5, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4332615.5, "n": 6, "primera": "2025-12-05", "ultima": "2025-12-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3466092.4, "n": 4, "sub": [{"titulo": "EPS", "total": 2166307.75, "n": 1, "primera": "2025-12-03", "ultima": "2025-12-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1299784.65, "n": 3, "primera": "2025-12-10", "ultima": "2025-12-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2166307.75, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2166307.75, "n": 8, "primera": "2025-12-01", "ultima": "2025-12-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3466092.4, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3466092.4, "n": 2, "primera": "2025-12-12", "ultima": "2025-12-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 7365446.350000001, "n": 12, "sub": [{"titulo": "Varios", "total": 7365446.350000001, "n": 12, "primera": "2025-12-02", "ultima": "2025-12-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2026-01": {"mes": "2026-01", "ingresos": 48550861, "egresos": 50356859, "balance": -1805998, "n_tx": 133, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 21847887.45, "n": 1, "sub": [{"titulo": "Oficina A", "total": 21847887.45, "n": 1, "primera": "2026-01-15", "ultima": "2026-01-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2026-01-15", "desc": "Pago mensual oficina A", "monto": 21847887.45, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 14565258.299999999, "n": 1, "sub": [{"titulo": "Local B", "total": 14565258.299999999, "n": 1, "primera": "2026-01-10", "ultima": "2026-01-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 7282629.149999999, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 4855086.100000001, "n": 2, "primera": "2026-01-05", "ultima": "2026-01-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2427543.0500000003, "n": 1, "primera": "2026-01-20", "ultima": "2026-01-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 4855086.100000001, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 4855086.100000001, "n": 1, "primera": "2026-01-01", "ultima": "2026-01-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 12589214.75, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 9064234.62, "n": 1, "primera": "2026-01-05", "ultima": "2026-01-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2517842.95, "n": 1, "primera": "2026-01-08", "ultima": "2026-01-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 1007137.18, "n": 1, "primera": "2026-01-12", "ultima": "2026-01-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 7553528.85, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 4028548.72, "n": 12, "primera": "2026-01-02", "ultima": "2026-01-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3524980.1300000004, "n": 6, "primera": "2026-01-03", "ultima": "2026-01-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 6042823.08, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2517842.95, "n": 3, "primera": "2026-01-01", "ultima": "2026-01-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3524980.1300000004, "n": 2, "primera": "2026-01-14", "ultima": "2026-01-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 5035685.9, "n": 6, "sub": [{"titulo": "Supermercado", "total": 5035685.9, "n": 6, "primera": "2026-01-05", "ultima": "2026-01-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 4028548.72, "n": 4, "sub": [{"titulo": "EPS", "total": 2517842.95, "n": 1, "primera": "2026-01-03", "ultima": "2026-01-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1510705.77, "n": 3, "primera": "2026-01-10", "ultima": "2026-01-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2517842.95, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2517842.95, "n": 8, "primera": "2026-01-01", "ultima": "2026-01-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 4028548.72, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 4028548.72, "n": 2, "primera": "2026-01-12", "ultima": "2026-01-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 8560666.030000001, "n": 12, "sub": [{"titulo": "Varios", "total": 8560666.030000001, "n": 12, "primera": "2026-01-02", "ultima": "2026-01-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2026-02": {"mes": "2026-02", "ingresos": 64358480, "egresos": 47684011, "balance": 16674469, "n_tx": 127, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 28961316.0, "n": 1, "sub": [{"titulo": "Oficina A", "total": 28961316.0, "n": 1, "primera": "2026-02-15", "ultima": "2026-02-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2026-02-15", "desc": "Pago mensual oficina A", "monto": 28961316.0, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 19307544.0, "n": 1, "sub": [{"titulo": "Local B", "total": 19307544.0, "n": 1, "primera": "2026-02-10", "ultima": "2026-02-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 9653772.0, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 6435848.0, "n": 2, "primera": "2026-02-05", "ultima": "2026-02-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 3217924.0, "n": 1, "primera": "2026-02-20", "ultima": "2026-02-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 6435848.0, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 6435848.0, "n": 1, "primera": "2026-02-01", "ultima": "2026-02-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 11921002.75, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 8583121.98, "n": 1, "primera": "2026-02-05", "ultima": "2026-02-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2384200.5500000003, "n": 1, "primera": "2026-02-08", "ultima": "2026-02-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 953680.22, "n": 1, "primera": "2026-02-12", "ultima": "2026-02-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 7152601.649999999, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3814720.88, "n": 12, "primera": "2026-02-02", "ultima": "2026-02-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3337880.7700000005, "n": 6, "primera": "2026-02-03", "ultima": "2026-02-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5722081.319999999, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2384200.5500000003, "n": 3, "primera": "2026-02-01", "ultima": "2026-02-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3337880.7700000005, "n": 2, "primera": "2026-02-14", "ultima": "2026-02-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4768401.100000001, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4768401.100000001, "n": 6, "primera": "2026-02-05", "ultima": "2026-02-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3814720.88, "n": 4, "sub": [{"titulo": "EPS", "total": 2384200.5500000003, "n": 1, "primera": "2026-02-03", "ultima": "2026-02-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1430520.3299999998, "n": 3, "primera": "2026-02-10", "ultima": "2026-02-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2384200.5500000003, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2384200.5500000003, "n": 8, "primera": "2026-02-01", "ultima": "2026-02-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3814720.88, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3814720.88, "n": 2, "primera": "2026-02-12", "ultima": "2026-02-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 8106281.870000001, "n": 12, "sub": [{"titulo": "Varios", "total": 8106281.870000001, "n": 12, "primera": "2026-02-02", "ultima": "2026-02-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2026-03": {"mes": "2026-03", "ingresos": 62440344, "egresos": 47109017, "balance": 15331327, "n_tx": 179, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 28098154.8, "n": 1, "sub": [{"titulo": "Oficina A", "total": 28098154.8, "n": 1, "primera": "2026-03-15", "ultima": "2026-03-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2026-03-15", "desc": "Pago mensual oficina A", "monto": 28098154.8, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 18732103.2, "n": 1, "sub": [{"titulo": "Local B", "total": 18732103.2, "n": 1, "primera": "2026-03-10", "ultima": "2026-03-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 9366051.6, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 6244034.4, "n": 2, "primera": "2026-03-05", "ultima": "2026-03-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 3122017.2, "n": 1, "primera": "2026-03-20", "ultima": "2026-03-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 6244034.4, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 6244034.4, "n": 1, "primera": "2026-03-01", "ultima": "2026-03-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 11777254.25, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 8479623.06, "n": 1, "primera": "2026-03-05", "ultima": "2026-03-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2355450.85, "n": 1, "primera": "2026-03-08", "ultima": "2026-03-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 942180.34, "n": 1, "primera": "2026-03-12", "ultima": "2026-03-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 7066352.55, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3768721.36, "n": 12, "primera": "2026-03-02", "ultima": "2026-03-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 3297631.1900000004, "n": 6, "primera": "2026-03-03", "ultima": "2026-03-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 5653082.04, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2355450.85, "n": 3, "primera": "2026-03-01", "ultima": "2026-03-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 3297631.1900000004, "n": 2, "primera": "2026-03-14", "ultima": "2026-03-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4710901.7, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4710901.7, "n": 6, "primera": "2026-03-05", "ultima": "2026-03-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3768721.36, "n": 4, "sub": [{"titulo": "EPS", "total": 2355450.85, "n": 1, "primera": "2026-03-03", "ultima": "2026-03-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1413270.51, "n": 3, "primera": "2026-03-10", "ultima": "2026-03-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2355450.85, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2355450.85, "n": 8, "primera": "2026-03-01", "ultima": "2026-03-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3768721.36, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3768721.36, "n": 2, "primera": "2026-03-12", "ultima": "2026-03-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 8008532.890000001, "n": 12, "sub": [{"titulo": "Varios", "total": 8008532.890000001, "n": 12, "primera": "2026-03-02", "ultima": "2026-03-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}, "2026-04": {"mes": "2026-04", "ingresos": 47396072, "egresos": 41006365, "balance": 6389707, "n_tx": 144, "grupos_ingreso": [{"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Oficina A", "total": 21328232.400000002, "n": 1, "sub": [{"titulo": "Oficina A", "total": 21328232.400000002, "n": 1, "primera": "2026-04-15", "ultima": "2026-04-15", "cat": "Arriendo recibido", "tx": [{"fecha": "2026-04-15", "desc": "Pago mensual oficina A", "monto": 21328232.400000002, "cat": "Arriendo"}]}]}, {"grupo_gordo": "\ud83c\udfd8\ufe0f Arriendo \u00b7 Local B", "total": 14218821.6, "n": 1, "sub": [{"titulo": "Local B", "total": 14218821.6, "n": 1, "primera": "2026-04-10", "ultima": "2026-04-10", "cat": "Arriendo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbc Trabajo freelance", "total": 7109410.8, "n": 3, "sub": [{"titulo": "Freelance cliente X", "total": 4739607.2, "n": 2, "primera": "2026-04-05", "ultima": "2026-04-22", "cat": "Trabajo", "tx": []}, {"titulo": "Freelance cliente Y", "total": 2369803.6, "n": 1, "primera": "2026-04-20", "ultima": "2026-04-20", "cat": "Trabajo", "tx": []}]}, {"grupo_gordo": "\ud83d\udcc8 Rendimientos CDT", "total": 4739607.2, "n": 1, "sub": [{"titulo": "Intereses CDT", "total": 4739607.2, "n": 1, "primera": "2026-04-01", "ultima": "2026-04-01", "cat": "Rendimiento", "tx": []}]}], "grupos_egreso": [{"grupo_gordo": "\ud83c\udfe0 Vivienda", "total": 10251591.25, "n": 3, "sub": [{"titulo": "Arriendo casa", "total": 7381145.7, "n": 1, "primera": "2026-04-05", "ultima": "2026-04-05", "cat": "Vivienda", "tx": []}, {"titulo": "Administraci\u00f3n", "total": 2050318.25, "n": 1, "primera": "2026-04-08", "ultima": "2026-04-08", "cat": "Vivienda", "tx": []}, {"titulo": "Servicios p\u00fablicos", "total": 820127.3, "n": 1, "primera": "2026-04-12", "ultima": "2026-04-12", "cat": "Servicios", "tx": []}]}, {"grupo_gordo": "\ud83c\udf7d\ufe0f Comida fuera", "total": 6150954.75, "n": 18, "sub": [{"titulo": "Rappi Colombia", "total": 3280509.2, "n": 12, "primera": "2026-04-02", "ultima": "2026-04-28", "cat": "Delivery", "tx": []}, {"titulo": "Restaurantes varios", "total": 2870445.5500000003, "n": 6, "primera": "2026-04-03", "ultima": "2026-04-26", "cat": "Restaurantes", "tx": []}]}, {"grupo_gordo": "\ud83c\udfdb\ufe0f Impuestos", "total": 4920763.8, "n": 5, "sub": [{"titulo": "4x1000 GMF", "total": 2050318.25, "n": 3, "primera": "2026-04-01", "ultima": "2026-04-28", "cat": "Impuestos", "tx": []}, {"titulo": "DIAN", "total": 2870445.5500000003, "n": 2, "primera": "2026-04-14", "ultima": "2026-04-21", "cat": "Impuestos", "tx": []}]}, {"grupo_gordo": "\ud83d\uded2 Mercado", "total": 4100636.5, "n": 6, "sub": [{"titulo": "Supermercado", "total": 4100636.5, "n": 6, "primera": "2026-04-05", "ultima": "2026-04-25", "cat": "Mercado", "tx": []}]}, {"grupo_gordo": "\ud83d\udc8a Salud", "total": 3280509.2, "n": 4, "sub": [{"titulo": "EPS", "total": 2050318.25, "n": 1, "primera": "2026-04-03", "ultima": "2026-04-03", "cat": "Salud", "tx": []}, {"titulo": "Farmacia", "total": 1230190.95, "n": 3, "primera": "2026-04-10", "ultima": "2026-04-24", "cat": "Salud", "tx": []}]}, {"grupo_gordo": "\ud83d\udcbb Suscripciones", "total": 2050318.25, "n": 8, "sub": [{"titulo": "Netflix, Claude, Apple", "total": 2050318.25, "n": 8, "primera": "2026-04-01", "ultima": "2026-04-28", "cat": "Suscripciones", "tx": []}]}, {"grupo_gordo": "\u2708\ufe0f Viajes", "total": 3280509.2, "n": 2, "sub": [{"titulo": "Hotel ejemplo", "total": 3280509.2, "n": 2, "primera": "2026-04-12", "ultima": "2026-04-15", "cat": "Viajes", "tx": []}]}, {"grupo_gordo": "\ud83d\udce6 Otros", "total": 6971082.050000001, "n": 12, "sub": [{"titulo": "Varios", "total": 6971082.050000001, "n": 12, "primera": "2026-04-02", "ultima": "2026-04-27", "cat": "Otros", "tx": []}]}], "top_tx_egreso": []}}, "saldos_serie": [{"mes": "2025-01", "saldo": 85033905}, {"mes": "2025-02", "saldo": 89451772}, {"mes": "2025-03", "saldo": 94171221}, {"mes": "2025-04", "saldo": 94192144}, {"mes": "2025-05", "saldo": 97242762}, {"mes": "2025-06", "saldo": 108808996}, {"mes": "2025-07", "saldo": 113013717}, {"mes": "2025-08", "saldo": 111644609}, {"mes": "2025-09", "saldo": 116189902}, {"mes": "2025-10", "saldo": 119216243}, {"mes": "2025-11", "saldo": 125990069}, {"mes": "2025-12", "saldo": 130851840}, {"mes": "2026-01", "saldo": 131550861}, {"mes": "2026-02", "saldo": 141358480}, {"mes": "2026-03", "saldo": 143440344}, {"mes": "2026-04", "saldo": 142396072}], "arrendatarios": [{"nombre": "Oficina A", "pagos": [{"mes": "2025-03", "total": 8000000, "n": 1}, {"mes": "2025-04", "total": 8000000, "n": 1}, {"mes": "2025-05", "total": 8000000, "n": 1}, {"mes": "2025-06", "total": 8000000, "n": 1}, {"mes": "2025-07", "total": 8000000, "n": 1}, {"mes": "2025-08", "total": 8000000, "n": 1}, {"mes": "2025-09", "total": 8000000, "n": 1}, {"mes": "2025-10", "total": 8000000, "n": 1}, {"mes": "2025-11", "total": 8000000, "n": 1}, {"mes": "2025-12", "total": 8000000, "n": 1}, {"mes": "2026-01", "total": 8000000, "n": 1}, {"mes": "2026-02", "total": 8000000, "n": 1}, {"mes": "2026-03", "total": 8000000, "n": 1}, {"mes": "2026-04", "total": 8000000, "n": 1}]}, {"nombre": "Local B", "pagos": [{"mes": "2025-03", "total": 15000000, "n": 1}, {"mes": "2025-04", "total": 0, "n": 0}, {"mes": "2025-05", "total": 15000000, "n": 1}, {"mes": "2025-06", "total": 0, "n": 0}, {"mes": "2025-07", "total": 15000000, "n": 1}, {"mes": "2025-08", "total": 0, "n": 0}, {"mes": "2025-09", "total": 15000000, "n": 1}, {"mes": "2025-10", "total": 0, "n": 0}, {"mes": "2025-11", "total": 15000000, "n": 1}, {"mes": "2025-12", "total": 0, "n": 0}, {"mes": "2026-01", "total": 15000000, "n": 1}, {"mes": "2026-02", "total": 0, "n": 0}, {"mes": "2026-03", "total": 15000000, "n": 1}, {"mes": "2026-04", "total": 0, "n": 0}]}, {"nombre": "Arrendatario 3", "pagos": [{"mes": "2025-03", "total": 7500000, "n": 1}, {"mes": "2025-04", "total": 7500000, "n": 1}, {"mes": "2025-05", "total": 7500000, "n": 1}, {"mes": "2025-06", "total": 7500000, "n": 1}, {"mes": "2025-07", "total": 7500000, "n": 1}, {"mes": "2025-08", "total": 7500000, "n": 1}, {"mes": "2025-09", "total": 7500000, "n": 1}, {"mes": "2025-10", "total": 7500000, "n": 1}, {"mes": "2025-11", "total": 7500000, "n": 1}, {"mes": "2025-12", "total": 7500000, "n": 1}, {"mes": "2026-01", "total": 7500000, "n": 1}, {"mes": "2026-02", "total": 7500000, "n": 1}, {"mes": "2026-03", "total": 7500000, "n": 1}, {"mes": "2026-04", "total": 7500000, "n": 1}]}, {"nombre": "Arrendatario 4", "pagos": [{"mes": "2025-03", "total": 8500000, "n": 1}, {"mes": "2025-04", "total": 8500000, "n": 1}, {"mes": "2025-05", "total": 8500000, "n": 1}, {"mes": "2025-06", "total": 8500000, "n": 1}, {"mes": "2025-07", "total": 8500000, "n": 1}, {"mes": "2025-08", "total": 8500000, "n": 1}, {"mes": "2025-09", "total": 8500000, "n": 1}, {"mes": "2025-10", "total": 8500000, "n": 1}, {"mes": "2025-11", "total": 8500000, "n": 1}, {"mes": "2025-12", "total": 8500000, "n": 1}, {"mes": "2026-01", "total": 8500000, "n": 1}, {"mes": "2026-02", "total": 8500000, "n": 1}, {"mes": "2026-03", "total": 8500000, "n": 1}, {"mes": "2026-04", "total": 8500000, "n": 1}]}], "meses_arr": ["2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04"], "top_cats": [], "suscripciones": [], "comisiones_mes": 150000, "delta_gasto": -1500000, "stats_mes": {"gasto_real": 12000000, "ingreso": 60000000, "impuesto": 3000000, "arriendo_pago": 5000000, "nomina_pago": 2000000, "interno": 10000000, "tx": 45}, "stats_prev": {"gasto_real": 13500000, "ingreso": 58000000, "impuesto": 2800000, "arriendo_pago": 5000000, "nomina_pago": 2000000, "interno": 12000000, "tx": 42}, "mes_prev": "2026-03", "gasto_real_mensual": [], "recomendaciones": [{"titulo": "Ejemplo: cancelar suscripciones sin uso", "detalle": "Hay 3 apps que no has abierto en 60 d\u00edas.", "ahorro_mes": 250000}]};
+// Override decrypt: siempre devuelve los mock data
+async function decrypt(pw) { return window.__CLARIDAD_PREVIEW_DATA__; }
+// Auto-unlock con cualquier password
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    document.getElementById('pw').value = 'preview';
+    document.getElementById('unlock-btn').click();
+  }, 300);
+});
+</script></body>
+</html>
