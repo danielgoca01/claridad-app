@@ -1,0 +1,10 @@
+.DS_Store
+*.csv
+*.pdf
+*.xlsx
+*.json
+!package.json
+# Solo se publica el HTML cifrado y sus assets — nada legible sin contraseña
+*.html
+!index.html
+!version.json
